@@ -19,9 +19,7 @@ public class MainChatScreen extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.main_menu, menu);
-        if(false){
-            return false;
-        }
+
         return super.onCreateOptionsMenu(menu);
     }
 }
