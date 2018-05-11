@@ -1,9 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context="MainChatScreen">
+
+<android.support.constraint.ConstraintLayout
+    android:id="@+id/viewA"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainChatScreen">
+    android:layout_weight="0.6"
+    android:orientation="horizontal">
 
 </android.support.constraint.ConstraintLayout>
+
+<android.support.design.widget.FloatingActionButton
+    android:id="@+id/float_add_ppl"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:focusable="true"
+    android:layout_marginBottom="140dp"
+    android:layout_marginRight="@dimen/fab_margin_right"
+    app:layout_anchorGravity="bottom|right|end"
+    app:srcCompat="@drawable/ic_add_ppl"
+    android:elevation="6dp"
+    app:pressedTranslationZ="12dp"
+    app:layout_anchor="@id/viewA"
+    android:visibility="invisible"
+
+    />
+
+<android.support.design.widget.FloatingActionButton
+    android:id="@+id/float_ppl_list"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:focusable="true"
+    android:layout_marginBottom="80dp"
+    android:layout_marginRight="@dimen/fab_margin_right"
+    app:layout_anchorGravity="bottom|right|end"
+    app:srcCompat="@drawable/ic_contact_list"
+    android:elevation="6dp"
+    app:pressedTranslationZ="12dp"
+    android:visibility="invisible"
+    app:layout_anchor="@id/viewA"
+    />
+<android.support.design.widget.FloatingActionButton
+    android:id="@+id/floatBtn"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:focusable="true"
+    android:layout_marginBottom="16dp"
+    android:layout_marginRight="@dimen/fab_margin_right"
+    android:onClick="onFabClick"
+    app:layout_anchorGravity="bottom|right|end"
+    app:srcCompat="@drawable/ic_plus"
+    app:layout_anchor="@id/viewA"
+    android:elevation="6dp"
+    app:pressedTranslationZ="12dp"
+    app:backgroundTint="@color/colorPrimary"
+    />
+
+</android.support.design.widget.CoordinatorLayout>
