@@ -1,6 +1,7 @@
 package com.example.android.chatmini;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,15 +22,36 @@ public class MainChatScreen extends AppCompatActivity {
     Animation fabOpen, fabClose, rotateClockwise, rotateAntiClockwise;
     boolean isOpen = false;
     private FirebaseAuth mAuth;
+    private Button logoutButton;
+    private FirebaseAuth.AuthStateListener mAuthStateListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_chat_screen);
         setTitle("BTolk");
 
-        //Checking Auth
+
 
         mAuth = FirebaseAuth.getInstance();
+        mAuthStateListener= new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if(firebaseAuth.getCurrentUser()==null)
+                    startActivity(new Intent(MainChatScreen.this,LoginScreen.class));
+            }
+        };
+        logoutButton=findViewById(R.id.logout);
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAuth.signOut();
+            }
+        });
+
+
+        //Checking Auth
+
+
 
         mainFab = findViewById(R.id.floatBtn);
         addPeople = findViewById(R.id.float_add_ppl);
@@ -45,6 +68,7 @@ public class MainChatScreen extends AppCompatActivity {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
+        mAuth.addAuthStateListener(mAuthStateListener);
      if(currentUser== null)
      {
          Intent LoginScreenIntent= new Intent(MainChatScreen.this,LoginScreen.class);
@@ -114,5 +138,7 @@ public class MainChatScreen extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), AllUser.class);
         startActivity(intent);
     }
+
+
 
 }
