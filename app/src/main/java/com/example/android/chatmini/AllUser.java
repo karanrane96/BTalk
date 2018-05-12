@@ -36,16 +36,16 @@ public class AllUser extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_user);
         setTitle("AlL users");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         userList = (RecyclerView) findViewById(R.id.user_rec_view);
         userList.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         userList.setLayoutManager(linearLayoutManager);
-
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         userDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
-        avi = (AVLoadingIndicatorView) findViewById(R.id.progress_bar);
-        loadingMsg = findViewById(R.id.progress_txt);
+//        avi = (AVLoadingIndicatorView) findViewById(R.id.progress_bar);
+//        loadingMsg = findViewById(R.id.progress_txt);
 
     }
 
@@ -85,9 +85,10 @@ public class AllUser extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        avi.show();
-        loadingMsg.setVisibility(View.VISIBLE);
-        userDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+        //avi.show();
+       // loadingMsg.setVisibility(View.VISIBLE);
+
+       /* userDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 avi.hide();
@@ -98,7 +99,7 @@ public class AllUser extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
                 Log.w("cancelled","can");
             }
-        });
+        });*/
 
         FirebaseRecyclerAdapter<Users,UserViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Users, UserViewHolder>(
                 Users.class,
@@ -108,6 +109,7 @@ public class AllUser extends AppCompatActivity {
         ) {
             @Override
             protected void populateViewHolder(UserViewHolder viewHolder, Users model, int position) {
+                Log.d("data",model.getName());
                 viewHolder.setValues(model.getName(), model.getDesig());
             }
         };
@@ -132,8 +134,6 @@ public class AllUser extends AppCompatActivity {
             TextView nameTv, desigTv;
             nameTv =  mView.findViewById(R.id.user_name);
             desigTv = mView.findViewById(R.id.user_desig);
-
-
             nameTv.setText(nameh);
             desigTv.setText(desigh);
         }
