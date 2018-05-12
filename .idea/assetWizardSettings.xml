@@ -34,9 +34,8 @@
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="imageAsset" value="$USER_HOME$/Downloads/icons8-user-menu-male-24.png" />
-                                      <entry key="outputName" value="ic_contact_list" />
-                                      <entry key="theme" value="HOLO_DARK" />
+                                      <entry key="imageAsset" value="$USER_HOME$/Downloads/default-profile.png" />
+                                      <entry key="outputName" value="ic_default_profile" />
                                     </map>
                                   </option>
                                 </PersistentState>

@@ -16,7 +16,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainChatScreen"></activity>
+        <activity android:name=".MainChatScreen" />
+        <activity android:name=".AllUser"
+            android:parentActivityName=".MainChatScreen"></activity>
+
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
 
 </manifest>

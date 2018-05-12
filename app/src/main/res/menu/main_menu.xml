@@ -17,7 +17,7 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/menu_profile"
-        android:title="@string/profile" />
+        android:title="@string/profile_pic" />
     <item
         android:id="@+id/menu_req_st"
         android:title="@string/req_status" />

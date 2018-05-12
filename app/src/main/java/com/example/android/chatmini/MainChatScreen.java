@@ -1,5 +1,6 @@
 package com.example.android.chatmini;
 
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ public class MainChatScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_chat_screen);
+        setTitle("BTolk");
         mainFab = findViewById(R.id.floatBtn);
         addPeople = findViewById(R.id.float_add_ppl);
         peopleList = findViewById(R.id.float_ppl_list);
@@ -49,14 +51,14 @@ public class MainChatScreen extends AppCompatActivity {
                 Toast.makeText(this,"search",Toast.LENGTH_LONG).show();
                 break;
             case R.id.menu_profile:
-                Toast.makeText(this,"profile",Toast.LENGTH_LONG).show();
+                Toast.makeText(this,"profile_pic",Toast.LENGTH_LONG).show();
                 break;
             case R.id.menu_req_st:
                 Toast.makeText(this,"req in menu",Toast.LENGTH_LONG).show();
                 break;
 
             default:
-                Toast.makeText(this,"hello",Toast.LENGTH_LONG).show();
+               return false;
 
         }
 
@@ -80,6 +82,17 @@ public class MainChatScreen extends AppCompatActivity {
             peopleList.setClickable(true);
             isOpen = true;
         }
+    }
+
+    public void onAddpplFabClick(View view){
+        Toast.makeText(this, "add ppl fab clicked", Toast.LENGTH_SHORT).show();
+
+    }
+
+    public void onAllPplFabClick(View view){
+        Toast.makeText(this, "all ppl fab clicked", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getApplicationContext(), AllUser.class);
+        startActivity(intent);
     }
 
 }
