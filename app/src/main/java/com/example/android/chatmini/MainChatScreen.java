@@ -44,6 +44,7 @@ public class MainChatScreen extends AppCompatActivity {
 
         switch (menuItem.getItemId()) {
             case R.id.reqStatus:
+
                 Toast.makeText(this,"req",Toast.LENGTH_LONG).show();
                 break;
 
