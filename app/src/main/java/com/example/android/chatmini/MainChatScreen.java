@@ -12,16 +12,24 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class MainChatScreen extends AppCompatActivity {
     FloatingActionButton mainFab, addPeople, peopleList;
     Animation fabOpen, fabClose, rotateClockwise, rotateAntiClockwise;
     boolean isOpen = false;
-
+    private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_chat_screen);
         setTitle("BTolk");
+
+        //Checking Auth
+
+        mAuth = FirebaseAuth.getInstance();
+
         mainFab = findViewById(R.id.floatBtn);
         addPeople = findViewById(R.id.float_add_ppl);
         peopleList = findViewById(R.id.float_ppl_list);
@@ -31,6 +39,20 @@ public class MainChatScreen extends AppCompatActivity {
         rotateAntiClockwise = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_anticlockwise);
 
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+     if(currentUser== null)
+     {
+         Intent LoginScreenIntent= new Intent(MainChatScreen.this,LoginScreen.class);
+         startActivity(LoginScreenIntent);
+         finish();
+     }
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
