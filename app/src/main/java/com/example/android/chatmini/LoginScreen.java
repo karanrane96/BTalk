@@ -41,6 +41,13 @@ public class LoginScreen extends AppCompatActivity {
         setContentView(R.layout.activity_login_screen);
 
         mAuth=FirebaseAuth.getInstance();
+        mAuthStateListener= new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if(firebaseAuth.getCurrentUser()!=null)
+                    startActivity(new Intent(LoginScreen.this,MainChatScreen.class));
+            }
+        };
 
 
         Sbutton=findViewById(R.id.sign_in_button);
@@ -63,9 +70,15 @@ public class LoginScreen extends AppCompatActivity {
         Sbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                    signIn();
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthStateListener);
     }
 
     private void signIn() {
@@ -85,8 +98,7 @@ public class LoginScreen extends AppCompatActivity {
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
             } else {
-                // Google Sign In failed, update UI appropriately
-                // ...
+                Log.d(TAG, "Fail");
             }
         }
     }

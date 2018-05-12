@@ -24,7 +24,7 @@
         android:layout_below="@+id/progress_bar"
         android:layout_centerHorizontal="true"
 
-        android:text="@string/loading_users" />
+         />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/user_rec_view"
