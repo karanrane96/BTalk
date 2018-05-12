@@ -16,13 +16,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.wang.avi.AVLoadingIndicatorView;
 
 public class AllUser extends AppCompatActivity {
 
     private RecyclerView userList;
     private DatabaseReference userDatabase;
+    public AVLoadingIndicatorView avi;
+    TextView loadingMsg;
 
 
     @Override
@@ -38,6 +44,8 @@ public class AllUser extends AppCompatActivity {
         userList.setLayoutManager(linearLayoutManager);
 
         userDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
+        avi = (AVLoadingIndicatorView) findViewById(R.id.progress_bar);
+        loadingMsg = findViewById(R.id.progress_txt);
 
     }
 
@@ -77,7 +85,20 @@ public class AllUser extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        avi.show();
+        loadingMsg.setVisibility(View.VISIBLE);
+        userDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                avi.hide();
+                loadingMsg.setVisibility(View.INVISIBLE);
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("cancelled","can");
+            }
+        });
 
         FirebaseRecyclerAdapter<Users,UserViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Users, UserViewHolder>(
                 Users.class,
@@ -92,6 +113,7 @@ public class AllUser extends AppCompatActivity {
         };
 
         userList.setAdapter(firebaseRecyclerAdapter);
+
     }
 
 
