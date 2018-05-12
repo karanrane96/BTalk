@@ -1,8 +1,9 @@
 <resources>
-    <string name="app_name">BTalk</string>
+    <string name="app_name">BTolk</string>
     <string name="req_status">Request Status</string>
     <string name="search">Search</string>
     <string name="profile_pic">Profile</string>
     <string name="profile_picture">Profile Picture</string>
+    <string name="loading_users">Loading user\'s list...</string>
 
 </resources>
