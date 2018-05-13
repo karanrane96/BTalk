@@ -3,8 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/BTalk.iml" filepath="$PROJECT_DIR$/BTalk.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/BTalk.iml" filepath="$PROJECT_DIR$/.idea/BTalk.iml" />
       <module fileurl="file://C:/Karan/Android/BTalk/BTalk.iml" filepath="C:/Karan/Android/BTalk/BTalk.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/BTalk.iml" filepath="$PROJECT_DIR$/.idea/BTalk.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

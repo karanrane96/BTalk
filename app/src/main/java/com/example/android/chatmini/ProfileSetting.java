@@ -4,6 +4,9 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +34,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.wang.avi.AVLoadingIndicatorView;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -41,7 +48,7 @@ public class ProfileSetting extends AppCompatActivity {
     public TextView status, userName, company, designation, email;
     CircleImageView profPic;
     ImageView editCompany, editDesig;
-    String m_Text, uName, uCompany, uDesig, uEmail, uid;
+    String m_Text, uName, uCompany, uDesig, uEmail, uid, profilePic;
     AVLoadingIndicatorView progress;
     DatabaseReference mDb;
     private DatabaseReference database;
@@ -162,7 +169,8 @@ public class ProfileSetting extends AppCompatActivity {
                 uCompany = dataSnapshot.child("company").getValue().toString();
                 uDesig = dataSnapshot.child("desig").getValue().toString();
                 uEmail = dataSnapshot.child("email").getValue().toString();
-
+                profilePic = dataSnapshot.child("profile_pic").getValue().toString();
+                new ImageLoadTask(profilePic, profPic).execute();
                 userName.setText(uName);
                 company.setText(uCompany);
                 email.setText(uEmail);
@@ -178,6 +186,41 @@ public class ProfileSetting extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
+
+        private String url;
+        private ImageView imageView;
+
+        public ImageLoadTask(String url, ImageView imageView) {
+            this.url = url;
+            this.imageView = imageView;
+        }
+
+        @Override
+        protected Bitmap doInBackground(Void... params) {
+            try {
+                URL urlConnection = new URL(url);
+                HttpURLConnection connection = (HttpURLConnection) urlConnection
+                        .openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+                InputStream input = connection.getInputStream();
+                Bitmap myBitmap = BitmapFactory.decodeStream(input);
+                return myBitmap;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            super.onPostExecute(result);
+            imageView.setImageBitmap(result);
+        }
 
     }
 
