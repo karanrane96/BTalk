@@ -125,7 +125,7 @@ public class LoginScreen extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            String uid = FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
                             database = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
                             HashMap<String,String> userMap = new HashMap<>();
                             userMap.put("name",account.getDisplayName());
