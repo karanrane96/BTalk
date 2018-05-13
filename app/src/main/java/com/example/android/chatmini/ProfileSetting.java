@@ -169,7 +169,9 @@ public class ProfileSetting extends AppCompatActivity {
                 uDesig = dataSnapshot.child("desig").getValue().toString();
                 uEmail = dataSnapshot.child("email").getValue().toString();
                 profilePic = dataSnapshot.child("profile_pic").getValue().toString();
-                new ImageLoadTask(profilePic, profPic).execute();
+                if(!profPic.equals("default")){
+                    new ImageLoadTask(profilePic, profPic).execute();
+                }
                 userName.setText(uName);
                 company.setText(uCompany);
                 email.setText(uEmail);
