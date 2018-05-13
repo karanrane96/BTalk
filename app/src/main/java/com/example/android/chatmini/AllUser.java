@@ -1,5 +1,6 @@
 package com.example.android.chatmini;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -117,6 +118,17 @@ public class AllUser extends AppCompatActivity {
             protected void populateViewHolder(UserViewHolder viewHolder, Users model, int position) {
                 Log.d("data",model.getName());
                 viewHolder.setValues(model.getName(), model.getDesig(), model.getProfile_pic());
+
+                final String oppUserId = getRef(position).getKey();
+                viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent profInt = new Intent(AllUser.this, ProfilePage.class);
+                        profInt.putExtra("userId", oppUserId);
+                        startActivity(profInt);
+
+                    }
+                });
             }
         };
 

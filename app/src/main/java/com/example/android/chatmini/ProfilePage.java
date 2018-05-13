@@ -18,6 +18,7 @@ public class ProfilePage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_page);
 
+        String userId = getIntent().getStringExtra("userId");
         status = findViewById(R.id.user_status);
         userName = findViewById(R.id.user_name);
         company = findViewById(R.id.user_company);
