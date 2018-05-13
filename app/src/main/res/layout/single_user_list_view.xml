@@ -18,7 +18,7 @@
         app:layout_constraintCircleRadius="@dimen/fab_margin_right" />
 
     <TextView
-        android:id="@+id/user_name"
+        android:id="@+id/tx_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -34,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/user_name"
+        android:layout_alignStart="@+id/tx_name"
         android:layout_marginTop="51dp"
         android:text="User Desig / company"
         android:textSize="12sp" />

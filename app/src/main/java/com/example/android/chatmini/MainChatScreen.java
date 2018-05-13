@@ -96,7 +96,9 @@ public class MainChatScreen extends AppCompatActivity {
                 Toast.makeText(this,"search",Toast.LENGTH_LONG).show();
                 break;
             case R.id.menu_profile:
-                Toast.makeText(this,"profile_pic",Toast.LENGTH_LONG).show();
+                Intent profSetting = new Intent(MainChatScreen.this, ProfileSetting.class);
+                profSetting.putExtra("uid",mAuth.getCurrentUser().getUid().toString());
+                startActivity(profSetting);
                 break;
             case R.id.menu_req_st:
                 Toast.makeText(this,"req in menu",Toast.LENGTH_LONG).show();

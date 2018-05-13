@@ -22,12 +22,19 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.wang.avi.AVLoadingIndicatorView;
+
+import java.util.HashMap;
 
 public class LoginScreen extends AppCompatActivity {
 
     private static  final int RC_SIGN_IN=1;
-        private GoogleApiClient mGoogleApiClient;
+    private GoogleApiClient mGoogleApiClient;
     private SignInButton Sbutton;
+    private DatabaseReference database;
+    AVLoadingIndicatorView progressbar;
 
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
@@ -39,6 +46,9 @@ public class LoginScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_screen);
 
+        progressbar = findViewById(R.id.progress_bar);
+        progressbar.hide();
+        progressbar.setIndicator("Please Wait...");
         mAuth=FirebaseAuth.getInstance();
         mAuthStateListener= new FirebaseAuth.AuthStateListener() {
             @Override
@@ -96,13 +106,14 @@ public class LoginScreen extends AppCompatActivity {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
+                progressbar.show();
             } else {
                 Log.d(TAG, "Fail");
             }
         }
     }
 
-    private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
+    private void firebaseAuthWithGoogle(final GoogleSignInAccount account) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
 
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
@@ -114,7 +125,24 @@ public class LoginScreen extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            Intent MainChatIntent= new Intent(LoginScreen.this,MainChatScreen.class);
+                            String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            database = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
+                            HashMap<String,String> userMap = new HashMap<>();
+                            userMap.put("name",account.getDisplayName());
+                            userMap.put("email",account.getEmail());
+                            userMap.put("status","none");
+                            userMap.put("profile_pic",account.getPhotoUrl().toString());
+                            userMap.put("company","none");
+                            userMap.put("desig", "none");
+                            userMap.put("thumbnail","defaut");
+                            database.setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    progressbar.hide();
+                                    finish();
+                                }
+                            });
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());

@@ -1,17 +1,15 @@
 package com.example.android.chatmini;
 
-import android.support.annotation.NonNull;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +20,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.wang.avi.AVLoadingIndicatorView;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AllUser extends AppCompatActivity {
 
@@ -35,19 +35,25 @@ public class AllUser extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_user);
-        setTitle("AlL users");
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        setTitle("AlL users");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         userList = (RecyclerView) findViewById(R.id.user_rec_view);
         userList.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         userList.setLayoutManager(linearLayoutManager);
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         userDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
-//        avi = (AVLoadingIndicatorView) findViewById(R.id.progress_bar);
+        avi = (AVLoadingIndicatorView) findViewById(R.id.progress_bar);
 //        loadingMsg = findViewById(R.id.progress_txt);
 
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        finish();
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -85,21 +91,21 @@ public class AllUser extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        //avi.show();
+        avi.show();
        // loadingMsg.setVisibility(View.VISIBLE);
 
-       /* userDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+       userDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 avi.hide();
-                loadingMsg.setVisibility(View.INVISIBLE);
+                //loadingMsg.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.w("cancelled","can");
             }
-        });*/
+        });
 
         FirebaseRecyclerAdapter<Users,UserViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Users, UserViewHolder>(
                 Users.class,
@@ -110,7 +116,7 @@ public class AllUser extends AppCompatActivity {
             @Override
             protected void populateViewHolder(UserViewHolder viewHolder, Users model, int position) {
                 Log.d("data",model.getName());
-                viewHolder.setValues(model.getName(), model.getDesig());
+                viewHolder.setValues(model.getName(), model.getDesig(), model.getProfile_pic());
             }
         };
 
@@ -130,12 +136,17 @@ public class AllUser extends AppCompatActivity {
             this.mView = itemView;
         }
 
-        public void setValues(String nameh, String desigh){
+        public void setValues(String nameh, String desigh, String profile){
             TextView nameTv, desigTv;
-            nameTv =  mView.findViewById(R.id.user_name);
+            nameTv =  mView.findViewById(R.id.tx_name);
             desigTv = mView.findViewById(R.id.user_desig);
+            CircleImageView profilePic = mView.findViewById(R.id.user_profile_pic);
             nameTv.setText(nameh);
             desigTv.setText(desigh);
+            if (profile.length() > 0 && !profile.toString().equals("default")){
+                Uri mUri = Uri.parse(profile);
+                profilePic.setImageURI(mUri);
+            }
         }
     }
 }

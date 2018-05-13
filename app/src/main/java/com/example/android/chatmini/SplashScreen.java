@@ -25,6 +25,7 @@ public class SplashScreen extends AppCompatActivity {
             iv.startAnimation(myAnimation);
               Intent loginIntent= new Intent(SplashScreen.this,MainChatScreen.class);
               startActivity(loginIntent);
+              finish();
 //            Thread timer= new Thread() {
 //                @Override
 //                public void run() {

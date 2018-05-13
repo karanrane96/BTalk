@@ -19,5 +19,12 @@
         completions."
     </string>
     <string name="loading_users">Loading user's list...</string>
+    <string name="email">Email</string>
+    <string name="name">Name</string>
+    <string name="company">Company</string>
+    <string name="designation">Designation</string>
+    <string name="status">Desig @ company</string>
+    <string name="send_request">Send Request</string>
+    <string name="decline_request">Decline Request</string>
 
 </resources>
