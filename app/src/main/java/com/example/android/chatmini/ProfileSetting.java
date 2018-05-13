@@ -161,7 +161,6 @@ public class ProfileSetting extends AppCompatActivity {
 
     public void getDbData(){
 
-
         mDb.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
