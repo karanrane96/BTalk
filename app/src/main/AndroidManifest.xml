@@ -35,8 +35,10 @@
             android:name=".LoginScreen"
             android:noHistory="true" />
         <activity android:name=".ProfilePage" />
-        <activity android:name=".ProfileSetting"
-            android:parentActivityName=".MainChatScreen"></activity>
+        <activity
+            android:name=".ProfileSetting"
+            android:parentActivityName=".MainChatScreen" />
+        <activity android:name=".ChatScreen"></activity>
     </application>
 
 </manifest>
