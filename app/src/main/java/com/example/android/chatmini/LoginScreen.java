@@ -107,6 +107,7 @@ public class LoginScreen extends AppCompatActivity {
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
                 progressbar.show();
+                mGoogleApiClient.clearDefaultAccountAndReconnect();
             } else {
                 Log.d(TAG, "Fail");
             }

@@ -10,7 +10,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,7 +38,8 @@ public class ProfilePage extends AppCompatActivity {
     Button sendReqBtn, decReqBtn;
     String uName, uCompany, uDesig, uEmail, uid, profilePic, userId;
     int frndshpStatus; // 0 = not frnd, 1 = sent, 2 = rec, 3 = frnd
-    DatabaseReference databaseReference, userDb, frndReqDb, frndDb;
+    DatabaseReference databaseReference, userDb, frndReqDb, frndDb,notificationDb;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,7 @@ public class ProfilePage extends AppCompatActivity {
         userDb = databaseReference.child("Users").child(userId);
         frndReqDb = databaseReference.child("Friend_req");
         frndDb = databaseReference.child("Friends");
+        notificationDb=databaseReference.child("Notifications");
 
         frndshpStatus = 0;
         status = findViewById(R.id.user_status);
@@ -136,6 +140,17 @@ public class ProfilePage extends AppCompatActivity {
                                 sendReqBtn.setText("Cancel");
                                 frndshpStatus = 1; // sent = 1
                                 sendReqBtn.setEnabled(true);
+
+                                HashMap<String,String> notificationData=  new HashMap<>();
+                                notificationData.put("From",uid);
+                                notificationData.put("type","request");
+
+                                notificationDb.child(userId).push().setValue(notificationData).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(getApplicationContext(),"Request Sent",Toast.LENGTH_LONG).show();
+                                    }
+                                });
                             }
                         }
                     });

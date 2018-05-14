@@ -52,6 +52,7 @@ public class ProfileSetting extends AppCompatActivity {
     AVLoadingIndicatorView progress;
     DatabaseReference mDb;
     private DatabaseReference database;
+    private DatabaseReference mNotitificationDatabase;
     Dialog dialog;
 
     @Override

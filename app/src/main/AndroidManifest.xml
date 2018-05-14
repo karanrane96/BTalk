@@ -20,17 +20,14 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".SplashScreen"
-            android:noHistory="true">
-
-
-        </activity>
+            android:noHistory="true"></activity>
         <activity android:name=".MainChatScreen" />
         <activity
             android:name=".AllUser"
             android:parentActivityName=".MainChatScreen" />
         <activity
             android:name=".LoginScreen"
-            android:noHistory="true" >
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -41,8 +38,10 @@
         <activity
             android:name=".ProfileSetting"
             android:parentActivityName=".MainChatScreen" />
-        <activity android:name=".ChatScreen"
-            android:parentActivityName=".AllUser"></activity>
+        <activity
+            android:name=".ChatScreen"
+            android:parentActivityName=".AllUser" />
+        <activity android:name=".UserChat"></activity>
     </application>
 
 </manifest>
