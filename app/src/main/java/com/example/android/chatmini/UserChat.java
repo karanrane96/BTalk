@@ -4,7 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -29,7 +29,6 @@ public class UserChat extends AppCompatActivity {
         private  String mChatUser;
 
     private DatabaseReference mRootRef;
-    private FirebaseAuth mAuth;
     String mCurrentUserId;
     private ImageButton mChatAddButton;
     private ImageButton mChatSendButton;
@@ -63,7 +62,7 @@ public class UserChat extends AppCompatActivity {
 
         mMessagesList.setAdapter(mAdapter);
 
-        loadMessages();
+       loadMessages();
 
 
 
@@ -76,9 +75,11 @@ public class UserChat extends AppCompatActivity {
             }
         });
 
-        mAuth=FirebaseAuth.getInstance();
-        mCurrentUserId=mAuth.getCurrentUser().getUid();
+
+        mCurrentUserId= FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
+
         mRootRef= FirebaseDatabase.getInstance().getReference();
+
         mRootRef.child("Users").child(mChatUser).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -125,8 +126,9 @@ public class UserChat extends AppCompatActivity {
         });
     }
 
-    private void loadMessages() {
-        mRootRef.child("Messages").child(mCurrentUserId).child(mChatUser).addChildEventListener(new ChildEventListener() {
+    public void loadMessages() {
+        Log.d("Users","curr: "+mCurrentUserId);
+        mRootRef.child("messages").child(mCurrentUserId).child(mChatUser).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Messages message= dataSnapshot.getValue(Messages.class);
@@ -169,7 +171,7 @@ public class UserChat extends AppCompatActivity {
             messageMap.put("type", "text");
             messageMap.put("time", ServerValue.TIMESTAMP);
 
-            DatabaseReference user_message_push= mRootRef.child("Messages").child(mCurrentUserId).child(mChatUser).push();
+            DatabaseReference user_message_push= mRootRef.child("messages").child(mCurrentUserId).child(mChatUser).push();
 
             String push_id= user_message_push.getKey();
 

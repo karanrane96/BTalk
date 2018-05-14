@@ -142,7 +142,7 @@ public class AllUser extends AppCompatActivity {
                 viewHolder.mView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent chatInt = new Intent(AllUser.this, ProfilePage.class);
+                        Intent chatInt = new Intent(AllUser.this, UserChat.class);
                         chatInt.putExtra("userId", oppUserId);
                         startActivity(chatInt);
 
