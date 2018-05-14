@@ -19,6 +19,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.google.cloud.translate.Translate;
+import com.google.cloud.translate.Translate.TranslateOption;
+import com.google.cloud.translate.TranslateOptions;
+import com.google.cloud.translate.Translation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -134,6 +138,7 @@ public class UserChat extends AppCompatActivity {
                 Messages message= dataSnapshot.getValue(Messages.class);
                 messagesList.add(message);
                 mAdapter.notifyDataSetChanged();
+                mMessagesList.scrollToPosition(messagesList.size()-1);
             }
 
             @Override
@@ -170,6 +175,7 @@ public class UserChat extends AppCompatActivity {
             messageMap.put("seen", false);
             messageMap.put("type", "text");
             messageMap.put("time", ServerValue.TIMESTAMP);
+            messageMap.put("from",mCurrentUserId);
 
             DatabaseReference user_message_push= mRootRef.child("Messages").child(mCurrentUserId).child(mChatUser).push();
 
@@ -178,6 +184,8 @@ public class UserChat extends AppCompatActivity {
             Map messageUserMap = new HashMap();
             messageUserMap.put(currentUserRef + "/" + push_id,messageMap);
             messageUserMap.put(chatUserRef + "/" + push_id,messageMap);
+
+            mChatMsgView.setText(" ");
 
             mRootRef.updateChildren(messageUserMap, new DatabaseReference.CompletionListener() {
                 @Override
