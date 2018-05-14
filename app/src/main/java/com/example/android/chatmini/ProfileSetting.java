@@ -54,6 +54,7 @@ public class ProfileSetting extends AppCompatActivity {
 
         uid = FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
         mDb = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
+        mDb.keepSynced(true);
         Log.d(TAG,uid);
         status = findViewById(R.id.user_status);
         userName = findViewById(R.id.user_name);
@@ -65,6 +66,7 @@ public class ProfileSetting extends AppCompatActivity {
         editDesig = findViewById(R.id.edit_desig);
         //progress = findViewById(R.id.progress_bar);
         database = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
+        database.keepSynced(true);
 
         //progress.setIndicator("Loading Deatils...");
        // progress.show();

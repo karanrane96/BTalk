@@ -47,7 +47,7 @@ public class UserChat extends AppCompatActivity {
         setContentView(R.layout.activity_user_chat);
 
         mChatUser=getIntent().getStringExtra("userId");
-        mCurrentUserId=getIntent().getStringExtra("currentID");
+        //mCurrentUserId=getIntent().getStringExtra("currentID");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mChatAddButton= (ImageButton)findViewById(R.id.chat_add_btn);

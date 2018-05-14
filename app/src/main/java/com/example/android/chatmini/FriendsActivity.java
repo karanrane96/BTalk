@@ -35,7 +35,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class FriendsActivity extends AppCompatActivity {
 
     private RecyclerView frndList;
-    private DatabaseReference frndDatabase;
+    private DatabaseReference frndDB, userDB;
+    String currUser;
 //    public AVLoadingIndicatorView progressBar;
 
     @Override
@@ -50,8 +51,14 @@ public class FriendsActivity extends AppCompatActivity {
         frndList.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         frndList.setLayoutManager(linearLayoutManager);
-        frndDatabase = FirebaseDatabase.getInstance().getReference().child("Friends");
-//        progressBar = (AVLoadingIndicatorView) findViewById(R.id.progress_bar);
+
+        currUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        frndDB = FirebaseDatabase.getInstance().getReference().child("Friends").child("");
+        frndDB.keepSynced(true);
+        userDB = FirebaseDatabase.getInstance().getReference().child("Users");
+        userDB.keepSynced(true);
+        //        progressBar = (AVLoadingIndicatorView) findViewById(R.id.progress_bar);
 
 
     }
@@ -99,7 +106,7 @@ public class FriendsActivity extends AppCompatActivity {
 //        progressBar.show();
         // loadingMsg.setVisibility(View.VISIBLE);
 
-        frndDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+        frndDB.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 //                progressBar.hide();
@@ -112,27 +119,45 @@ public class FriendsActivity extends AppCompatActivity {
             }
         });
 
-        FirebaseRecyclerAdapter<Users,FrndViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Users, FrndViewHolder>(
-                Users.class,
+        FirebaseRecyclerAdapter<Friend,FrndViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Friend, FrndViewHolder>(
+                Friend.class,
                 R.layout.single_user_list_view,
                 FrndViewHolder.class,
-                frndDatabase
+                frndDB
         ) {
-            @Override
-            protected void populateViewHolder(FrndViewHolder viewHolder, Users model, int position) {
-                Log.d("data",model.getName());
-                viewHolder.setValues(model.getName(), model.getDesig(), model.getCompany(), model.getProfile_pic().toString());
 
+            @Override
+            protected void populateViewHolder(final FrndViewHolder viewHolder, Friend model, int position) {
+
+                final String date = model.getDate();
                 final String oppUserId = getRef(position).getKey();
-                Log.d("getKey: ",oppUserId);
+
+                final String list_user_id = getRef(position).getKey();
+
+                userDB.child(list_user_id).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String name, profilePic;
+                        name = dataSnapshot.child("name").getValue().toString();
+                        profilePic = dataSnapshot.child("profile_pic").getValue().toString();
+                        viewHolder.setValues(name, date, profilePic);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.d("db ref",databaseError.toString());
+
+                    }
+                });
                 viewHolder.mView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
 
                         //TODO friend chat
-                        Intent profInt = new Intent(FriendsActivity.this, ProfilePage.class);
-                        profInt.putExtra("userId", oppUserId);
-                        startActivity(profInt);
+                        Intent chatInt = new Intent(FriendsActivity.this, UserChat.class);
+                        chatInt.putExtra("userId", oppUserId);
+                        chatInt.putExtra("currentId",currUser);
+                        startActivity(chatInt);
 
                     }
                 });
@@ -153,17 +178,19 @@ public class FriendsActivity extends AppCompatActivity {
             this.mView = itemView;
         }
 
-        public void setValues(String nameh, String desigh, String comp, String profile){
+
+        public void setValues(String nameh, String date, String profile) {
             TextView nameTv, desigTv;
             nameTv =  mView.findViewById(R.id.tx_name);
             desigTv = mView.findViewById(R.id.user_desig);
             CircleImageView profilePic = mView.findViewById(R.id.user_profile_pic);
             nameTv.setText(nameh);
-            desigTv.setText(desigh+"@"+comp);
+            desigTv.setText("since "+date);
             if (profile.length() > 0 && !profile.toString().equals("default")){
                 new ImageLoadTask(profile, profilePic).execute();
                 //profilePic.setImageURI(mUri);
             }
+
         }
     }
 

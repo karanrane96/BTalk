@@ -97,6 +97,7 @@ public class ProfilePage extends AppCompatActivity {
                                 frndshpStatus = 2; // rec = 2
                                 sendReqBtn.setEnabled(true);
                                 decReqBtn.setVisibility(View.VISIBLE);
+                                decReqBtn.setVisibility(View.VISIBLE);
                             }else if (reqType.equals("sent")){
                                 sendReqBtn.setText("Cancel");
                                 frndshpStatus = 1; // sent = 1
@@ -111,6 +112,7 @@ public class ProfilePage extends AppCompatActivity {
                                         decReqBtn.setVisibility(View.INVISIBLE);
                                         sendReqBtn.setVisibility(View.VISIBLE);
                                         sendReqBtn.setText("Unfriend");
+                                        sendReqBtn.setEnabled(true);
                                     }
                                 }
 
@@ -152,6 +154,7 @@ public class ProfilePage extends AppCompatActivity {
                                 Log.d("db Err",databaseError.toException().toString());
                             }else {
                                 sendReqBtn.setText("Cancel");
+                                decReqBtn.setVisibility(View.INVISIBLE);
                                 frndshpStatus = 1; // sent = 1
                                 sendReqBtn.setEnabled(true);
                             }
