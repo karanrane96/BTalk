@@ -48,7 +48,7 @@ public class UserChat extends AppCompatActivity {
         setContentView(R.layout.activity_user_chat);
 
         mChatUser=getIntent().getStringExtra("userId");
-        mChatUser=getIntent().getStringExtra("currentID");
+        mCurrentUserId=getIntent().getStringExtra("currentID");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mChatAddButton= (ImageButton)findViewById(R.id.chat_add_btn);
@@ -63,6 +63,7 @@ public class UserChat extends AppCompatActivity {
         mMessagesList.setLayoutManager(mLinearLayout);
 
         mMessagesList.setAdapter(mAdapter);
+        mRootRef.child("messages").child(mCurrentUserId).child(mChatUser).getKey();
 
         loadMessages();
 
@@ -77,8 +78,8 @@ public class UserChat extends AppCompatActivity {
             }
         });
 
-        mAuth=FirebaseAuth.getInstance();
-        mCurrentUserId=mAuth.getCurrentUser().getUid();
+        //mAuthFirebaseAuth.getInstance();
+        //mCurrentUserId=mAuth.getCurrentUser().getUid();
         mRootRef= FirebaseDatabase.getInstance().getReference();
         mRootRef.child("Users").child(mChatUser).addValueEventListener(new ValueEventListener() {
             @Override
