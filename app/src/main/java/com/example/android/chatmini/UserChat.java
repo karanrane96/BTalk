@@ -47,6 +47,7 @@ public class UserChat extends AppCompatActivity {
         setContentView(R.layout.activity_user_chat);
 
         mChatUser=getIntent().getStringExtra("userId");
+        mCurrentUserId=getIntent().getStringExtra("currentID");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mChatAddButton= (ImageButton)findViewById(R.id.chat_add_btn);
@@ -75,9 +76,6 @@ public class UserChat extends AppCompatActivity {
         mCurrentUserId= getIntent().getStringExtra("currentId");
 
         mRootRef= FirebaseDatabase.getInstance().getReference();
-
-        Log.d("onCreate : ",getIntent().getStringExtra("currentId"));
-
         mRootRef.child("Users").child(mChatUser).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -90,7 +88,6 @@ public class UserChat extends AppCompatActivity {
 
             }
         });
-
 
         mRootRef.child("Chats").child(mCurrentUserId).addValueEventListener(new ValueEventListener() {
             @Override
@@ -127,8 +124,7 @@ public class UserChat extends AppCompatActivity {
         loadMessages();
     }
 
-    public void loadMessages() {
-        Log.d("Users","curr: "+mCurrentUserId);
+    private void loadMessages() {
         mRootRef.child("messages").child(mCurrentUserId).child(mChatUser).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
