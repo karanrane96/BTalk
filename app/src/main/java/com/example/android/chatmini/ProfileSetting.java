@@ -74,6 +74,8 @@ public class ProfileSetting extends AppCompatActivity {
         editCompany = findViewById(R.id.edit_company);
         editDesig = findViewById(R.id.edit_desig);
         progress = findViewById(R.id.progress_bar);
+        database = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
+
         progress.setIndicator("Loading Deatils...");
         progress.show();
         getDbData();
@@ -99,7 +101,6 @@ public class ProfileSetting extends AppCompatActivity {
                         dialog.hide();
                         progress.show();
                         m_Text = editText.getText().toString();
-                        database = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
                         try {
                             database.child("company").setValue(m_Text).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
@@ -138,7 +139,6 @@ public class ProfileSetting extends AppCompatActivity {
                         progress.show();
 
                         m_Text = editText.getText().toString();
-                        database = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
                         try {
                             database.child("desig").setValue(m_Text).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override

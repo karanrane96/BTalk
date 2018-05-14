@@ -16,7 +16,6 @@
         android:layout_marginTop="8dp"
         app:indicatorColor="@android:color/background_dark"
         app:indicatorName="BallClipRotatePulseIndicator"
-        style="@style/AVLoadingIndicatorView.Large"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,12 +48,16 @@
 
     <TextView
         android:id="@+id/tx_name"
-        android:layout_width="wrap_content"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:layout_marginStart="56dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="64dp"
         android:text="@string/name"
+        android:textAlignment="viewStart"
         android:textColor="@android:color/background_dark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/user_status" />
 
@@ -64,21 +67,26 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="64dp"
         android:text="TextView"
+        android:textAlignment="textStart"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.165"
-        app:layout_constraintStart_toEndOf="@+id/tx_name"
+        app:layout_constraintHorizontal_bias="0.468"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/user_status" />
 
     <TextView
         android:id="@+id/tx_email"
-        android:layout_width="wrap_content"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:layout_marginStart="56dp"
         android:layout_marginTop="24dp"
         android:text="@string/email"
+        android:textAlignment="viewStart"
         android:textColor="@android:color/background_dark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tx_name" />
 
@@ -88,45 +96,48 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="20dp"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.177"
-        app:layout_constraintStart_toEndOf="@+id/tx_email"
+        app:layout_constraintHorizontal_bias="0.468"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/user_name" />
 
     <TextView
         android:id="@+id/tx_company"
-        android:layout_width="wrap_content"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="56dp"
         android:layout_marginTop="24dp"
         android:text="@string/company"
+        android:textAlignment="viewStart"
         android:textColor="@android:color/background_dark"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tx_email" />
 
     <TextView
         android:id="@+id/user_company"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
         android:text="TextView"
+        android:textAlignment="textStart"
         app:layout_constraintEnd_toStartOf="@+id/edit_company"
-        app:layout_constraintHorizontal_bias="0.777"
+        app:layout_constraintHorizontal_bias="0.315"
         app:layout_constraintStart_toEndOf="@+id/tx_company"
         app:layout_constraintTop_toBottomOf="@+id/user_email" />
 
     <TextView
         android:id="@+id/tx_desig"
-        android:layout_width="wrap_content"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginStart="56dp"
         android:layout_marginTop="24dp"
         android:text="@string/designation"
+        android:textAlignment="viewStart"
         android:textColor="@android:color/background_dark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -135,15 +146,17 @@
 
     <TextView
         android:id="@+id/user_desig"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="7dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
         android:text="TextView"
+        android:textAlignment="textStart"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/edit_desig"
+        app:layout_constraintHorizontal_bias="0.15"
         app:layout_constraintStart_toEndOf="@+id/tx_desig"
         app:layout_constraintTop_toBottomOf="@+id/user_company"
         app:layout_constraintVertical_bias="0.0" />
@@ -153,10 +166,10 @@
         android:id="@+id/edit_company"
         android:layout_width="21dp"
         android:layout_height="18dp"
-        android:layout_marginEnd="156dp"
-        android:layout_marginTop="316dp"
+        android:layout_marginEnd="88dp"
+        android:layout_marginTop="24dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/user_email"
         app:srcCompat="@drawable/ic_edit" />
 
     <ImageView
@@ -164,12 +177,12 @@
         android:layout_width="21dp"
         android:layout_height="18dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="156dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginEnd="88dp"
+        android:layout_marginTop="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_company"
-        app:layout_constraintVertical_bias="0.118"
+        app:layout_constraintVertical_bias="0.007"
         app:srcCompat="@drawable/ic_edit" />
 
 </android.support.constraint.ConstraintLayout>

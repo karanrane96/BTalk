@@ -21,11 +21,7 @@
         <activity
             android:name=".SplashScreen"
             android:noHistory="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".MainChatScreen" />
         <activity
@@ -33,12 +29,19 @@
             android:parentActivityName=".MainChatScreen" />
         <activity
             android:name=".LoginScreen"
-            android:noHistory="true" />
+            android:noHistory="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".ProfilePage" />
         <activity
             android:name=".ProfileSetting"
             android:parentActivityName=".MainChatScreen" />
-        <activity android:name=".ChatScreen"></activity>
+        <activity android:name=".ChatScreen"
+            android:parentActivityName=".AllUser"></activity>
     </application>
 
 </manifest>

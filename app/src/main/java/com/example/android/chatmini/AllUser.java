@@ -1,7 +1,10 @@
 package com.example.android.chatmini;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,16 +14,22 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.wang.avi.AVLoadingIndicatorView;
+
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -75,7 +84,9 @@ public class AllUser extends AppCompatActivity {
                 Toast.makeText(this,"search",Toast.LENGTH_LONG).show();
                 break;
             case R.id.menu_profile:
-                Toast.makeText(this,"profile_pic",Toast.LENGTH_LONG).show();
+                Intent profSetting = new Intent(AllUser.this, ProfileSetting.class);
+                profSetting.putExtra("uid", FirebaseAuth.getInstance().getCurrentUser().getUid().toString());
+                startActivity(profSetting);
                 break;
             case R.id.menu_req_st:
                 Toast.makeText(this,"req in menu",Toast.LENGTH_LONG).show();
@@ -117,9 +128,10 @@ public class AllUser extends AppCompatActivity {
             @Override
             protected void populateViewHolder(UserViewHolder viewHolder, Users model, int position) {
                 Log.d("data",model.getName());
-                viewHolder.setValues(model.getName(), model.getDesig(), model.getProfile_pic());
+                viewHolder.setValues(model.getName(), model.getDesig(), model.getCompany(), model.getProfile_pic().toString());
 
                 final String oppUserId = getRef(position).getKey();
+                Log.d("getKey: ",oppUserId);
                 viewHolder.mView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -148,17 +160,53 @@ public class AllUser extends AppCompatActivity {
             this.mView = itemView;
         }
 
-        public void setValues(String nameh, String desigh, String profile){
+        public void setValues(String nameh, String desigh, String comp, String profile){
             TextView nameTv, desigTv;
             nameTv =  mView.findViewById(R.id.tx_name);
             desigTv = mView.findViewById(R.id.user_desig);
             CircleImageView profilePic = mView.findViewById(R.id.user_profile_pic);
             nameTv.setText(nameh);
-            desigTv.setText(desigh);
+            desigTv.setText(desigh+"@"+comp);
             if (profile.length() > 0 && !profile.toString().equals("default")){
-                Uri mUri = Uri.parse(profile);
-                profilePic.setImageURI(mUri);
+                new ImageLoadTask(profile, profilePic).execute();
+                //profilePic.setImageURI(mUri);
             }
         }
+    }
+
+
+    public static class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
+
+        private String url;
+        private ImageView imageView;
+
+        public ImageLoadTask(String url, ImageView imageView) {
+            this.url = url;
+            this.imageView = imageView;
+        }
+
+        @Override
+        protected Bitmap doInBackground(Void... params) {
+            try {
+                URL urlConnection = new URL(url);
+                HttpURLConnection connection = (HttpURLConnection) urlConnection
+                        .openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+                InputStream input = connection.getInputStream();
+                Bitmap myBitmap = BitmapFactory.decodeStream(input);
+                return myBitmap;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            super.onPostExecute(result);
+            imageView.setImageBitmap(result);
+        }
+
     }
 }
