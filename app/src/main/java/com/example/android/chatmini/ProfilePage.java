@@ -17,8 +17,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.wang.avi.AVLoadingIndicatorView;
-
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -37,6 +35,7 @@ public class ProfilePage extends AppCompatActivity {
     String uName, uCompany, uDesig, uEmail, uid, profilePic, userId;
     int frndshpStatus; // 0 = not frnd, 1 = sent, 2 = rec, 3 = frnd
     DatabaseReference databaseReference, userDb, frndReqDb, frndDb;
+   // AVLoadingIndicatorView progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +61,8 @@ public class ProfilePage extends AppCompatActivity {
         sendReqBtn = findViewById(R.id.send_req_btn);
         decReqBtn = findViewById(R.id.dec_req_btn);
         decReqBtn.setVisibility(View.INVISIBLE);
-//        progress = findViewById(R.id.progress_barr);
-//        progress.show();
+       // progress = findViewById(R.id.progress_bar);
+        //progress.show();
 
         userDb.addValueEventListener(new ValueEventListener() {
             @Override
@@ -100,7 +99,7 @@ public class ProfilePage extends AppCompatActivity {
                                 sendReqBtn.setEnabled(true);
                             }
                         }
-//                        progress.hide();
+                        //progress.hide();
                     }
 
                     @Override

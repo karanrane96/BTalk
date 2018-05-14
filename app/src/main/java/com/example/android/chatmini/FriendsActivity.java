@@ -24,7 +24,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.roger.catloadinglibrary.CatLoadingView;
 
 
 import java.io.InputStream;
@@ -33,43 +32,29 @@ import java.net.URL;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class AllUser extends AppCompatActivity {
+public class FriendsActivity extends AppCompatActivity {
 
-    private RecyclerView userList;
-    private DatabaseReference userDatabase;
-    public CatLoadingView avi;
-    TextView loadingMsg;
-
+    private RecyclerView frndList;
+    private DatabaseReference frndDatabase;
+//    public AVLoadingIndicatorView progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_all_user);
+        setContentView(R.layout.activity_friends);
 
-        setTitle("AlL users");
+        setTitle("Friends");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        userList = (RecyclerView) findViewById(R.id.user_rec_view);
-        userList.setHasFixedSize(true);
+
+        frndList = (RecyclerView) findViewById(R.id.frnd_rec_view);
+        frndList.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        userList.setLayoutManager(linearLayoutManager);
-        userDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
-        avi = new CatLoadingView();
-        avi.setCanceledOnTouchOutside(false);
-        avi.setText("Loading users...");
+        frndList.setLayoutManager(linearLayoutManager);
+        frndDatabase = FirebaseDatabase.getInstance().getReference().child("Friends");
+//        progressBar = (AVLoadingIndicatorView) findViewById(R.id.progress_bar);
 
-       // avi.show(getSupportFragmentManager(), "");
-
-//        loadingMsg = findViewById(R.id.progress_txt);
 
     }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        //finish();
-    }
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
@@ -89,7 +74,7 @@ public class AllUser extends AppCompatActivity {
                 Toast.makeText(this,"search",Toast.LENGTH_LONG).show();
                 break;
             case R.id.menu_profile:
-                Intent profSetting = new Intent(AllUser.this, ProfileSetting.class);
+                Intent profSetting = new Intent(FriendsActivity.this, ProfileSetting.class);
                 profSetting.putExtra("uid", FirebaseAuth.getInstance().getCurrentUser().getUid().toString());
                 startActivity(profSetting);
                 break;
@@ -105,16 +90,19 @@ public class AllUser extends AppCompatActivity {
         return super.onOptionsItemSelected(menuItem);
     }
 
+    //main logic
+
     @Override
     protected void onStart() {
         super.onStart();
-        //avi.show();
-       // loadingMsg.setVisibility(View.VISIBLE);
 
-       userDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+//        progressBar.show();
+        // loadingMsg.setVisibility(View.VISIBLE);
+
+        frndDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-               // avi.hide();
+//                progressBar.hide();
                 //loadingMsg.setVisibility(View.INVISIBLE);
             }
 
@@ -124,14 +112,14 @@ public class AllUser extends AppCompatActivity {
             }
         });
 
-        FirebaseRecyclerAdapter<Users,UserViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Users, UserViewHolder>(
+        FirebaseRecyclerAdapter<Users,FrndViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Users, FrndViewHolder>(
                 Users.class,
                 R.layout.single_user_list_view,
-                UserViewHolder.class,
-                userDatabase
+                FrndViewHolder.class,
+                frndDatabase
         ) {
             @Override
-            protected void populateViewHolder(UserViewHolder viewHolder, Users model, int position) {
+            protected void populateViewHolder(FrndViewHolder viewHolder, Users model, int position) {
                 Log.d("data",model.getName());
                 viewHolder.setValues(model.getName(), model.getDesig(), model.getCompany(), model.getProfile_pic().toString());
 
@@ -140,7 +128,9 @@ public class AllUser extends AppCompatActivity {
                 viewHolder.mView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent profInt = new Intent(AllUser.this, ProfilePage.class);
+
+                        //TODO friend chat
+                        Intent profInt = new Intent(FriendsActivity.this, ProfilePage.class);
                         profInt.putExtra("userId", oppUserId);
                         startActivity(profInt);
 
@@ -149,17 +139,15 @@ public class AllUser extends AppCompatActivity {
             }
         };
 
-        userList.setAdapter(firebaseRecyclerAdapter);
-
+        frndList.setAdapter(firebaseRecyclerAdapter);
     }
 
 
-
-     public static class UserViewHolder extends RecyclerView.ViewHolder {
+    public static class FrndViewHolder extends RecyclerView.ViewHolder {
 
         public View mView;
 
-        public UserViewHolder(View itemView) {
+        public FrndViewHolder(View itemView) {
             super(itemView);
 
             this.mView = itemView;
@@ -178,6 +166,7 @@ public class AllUser extends AppCompatActivity {
             }
         }
     }
+
 
 
     public static class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
@@ -214,4 +203,5 @@ public class AllUser extends AppCompatActivity {
         }
 
     }
+
 }

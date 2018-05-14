@@ -24,7 +24,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.wang.avi.AVLoadingIndicatorView;
+
 
 import java.util.HashMap;
 
@@ -34,7 +34,7 @@ public class LoginScreen extends AppCompatActivity {
     private GoogleApiClient mGoogleApiClient;
     private SignInButton Sbutton;
     private DatabaseReference database;
-    AVLoadingIndicatorView progressbar;
+    //AVLoadingIndicatorView progressbar;
 
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
@@ -46,9 +46,9 @@ public class LoginScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_screen);
 
-        progressbar = findViewById(R.id.progress_bar);
-        progressbar.hide();
-        progressbar.setIndicator("Please Wait...");
+//        progressbar = findViewById(R.id.progress_bar);
+//        progressbar.hide();
+//        progressbar.setIndicator("Please Wait...");
         mAuth=FirebaseAuth.getInstance();
         mAuthStateListener= new FirebaseAuth.AuthStateListener() {
             @Override
@@ -106,7 +106,7 @@ public class LoginScreen extends AppCompatActivity {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
-                progressbar.show();
+                //progressbar.show();
             } else {
                 Log.d(TAG, "Fail");
             }
@@ -138,7 +138,7 @@ public class LoginScreen extends AppCompatActivity {
                             database.setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    progressbar.hide();
+//                                    progressbar.hide();
                                     finish();
                                 }
                             });
