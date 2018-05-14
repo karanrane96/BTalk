@@ -34,9 +34,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ProfilePage"
-            android:parentActivityName=".AllUser" />
+        <activity android:name=".ProfilePage" />
         <activity
             android:name=".ProfileSetting"
             android:parentActivityName=".MainChatScreen" />

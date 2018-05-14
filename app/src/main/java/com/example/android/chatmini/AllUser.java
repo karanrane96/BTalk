@@ -142,32 +142,10 @@ public class AllUser extends AppCompatActivity {
                 viewHolder.mView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-//                        Intent profInt = new Intent(AllUser.this, ChatScreen.class);
-//                        profInt.putExtra("userId", oppUserId);
-//                        startActivity(profInt);
-                        CharSequence options[]= new CharSequence[]{"Open Profile","Send Message"};
-                        AlertDialog.Builder builder= new AlertDialog.Builder(getApplicationContext());
-                        builder.setTitle("Select Options");
-                        builder.setItems(options, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                        Intent chatInt = new Intent(AllUser.this, ChatScreen.class);
+                        chatInt.putExtra("userId", oppUserId);
+                        startActivity(chatInt);
 
-                                // CLICK EVENT FOR EACH ITEM
-                                if(which==0){
-                                    Intent profileIntent= new Intent(AllUser.this,ProfilePage.class);
-                                    profileIntent.putExtra("userID",oppUserId);
-                                    startActivity(profileIntent);
-                                }
-                                else if(which==1)
-                                {
-                                    Intent chatIntent= new Intent(AllUser.this,UserChat.class);
-                                    chatIntent.putExtra("userID",oppUserId);
-                                    startActivity(chatIntent);
-                                }
-
-                            }
-                        });
-                        builder.show();
                     }
                 });
             }
