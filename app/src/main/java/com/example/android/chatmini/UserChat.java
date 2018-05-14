@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
@@ -27,21 +28,26 @@ public class UserChat extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_chat);
 
-        mChatUser=getIntent().getStringExtra("userID");
+        mChatUser=getIntent().getStringExtra("userId");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mAuth=FirebaseAuth.getInstance();
         mCurrentUserId=mAuth.getCurrentUser().getUid();
+        Log.d("mUser", mChatUser);
 
-        mRootRef.child("Users").child(mChatUser).addValueEventListener(new ValueEventListener() {
+        mRootRef = FirebaseDatabase.getInstance().getReference();
+        mRootRef.child("Users").child(mChatUser).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String chat_username= dataSnapshot.child("name").getValue().toString();
-                getSupportActionBar().setTitle(chat_username);
+                if(dataSnapshot.hasChild("name")) {
+                    String chat_username = dataSnapshot.child("name").getValue().toString();
+                    getSupportActionBar().setTitle(chat_username);
+                }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                Log.d("Chat Log",databaseError.getMessage());
 
             }
         });
@@ -74,6 +80,7 @@ public class UserChat extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                Log.d("Chat Log",databaseError.getMessage());
 
             }
         });

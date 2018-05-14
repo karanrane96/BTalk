@@ -98,6 +98,20 @@ public class ProfilePage extends AppCompatActivity {
                                 frndshpStatus = 1; // sent = 1
                                 sendReqBtn.setEnabled(true);
                             }
+                        } else {
+                            frndDb.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if(dataSnapshot.hasChild(userId)){
+
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    Log.d("db ref",databaseReference.toString());
+                                }
+                            });
                         }
                         //progress.hide();
                     }
@@ -130,8 +144,6 @@ public class ProfilePage extends AppCompatActivity {
                             if (databaseError != null){
                                 Log.d("db Err",databaseError.toException().toString());
                             }else {
-                                Log.d("db ref",databaseReference.toString());
-
                                 sendReqBtn.setText("Cancel");
                                 frndshpStatus = 1; // sent = 1
                                 sendReqBtn.setEnabled(true);
@@ -142,15 +154,14 @@ public class ProfilePage extends AppCompatActivity {
                 // sent : status = 1
                 if (frndshpStatus == 1){
                     Map reqMap = new HashMap();
-                    reqMap.put(uid + "/" + userId + "request_type",null);
-                    reqMap.put(userId + "/" + uid + "request_type",null);
+                    reqMap.put(uid + "/" + userId + "/request_type",null);
+                    reqMap.put(userId + "/" + uid + "/request_type",null);
                     frndReqDb.updateChildren(reqMap, new DatabaseReference.CompletionListener() {
                         @Override
-                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        public void onComplete(final DatabaseError databaseError, DatabaseReference databaseReference) {
                             if (databaseError != null){
                                 Log.d("db Err",databaseError.toException().toString());
                             }else {
-                                Log.d("db ref",databaseReference.toString());
 
                                 sendReqBtn.setText("Send");
                                 frndshpStatus = 0; // not_frnd = 0
@@ -160,33 +171,85 @@ public class ProfilePage extends AppCompatActivity {
                     });
                 }
 
+                // 2 = recd
                 if (frndshpStatus == 2){
-                    decReqBtn.setVisibility(View.INVISIBLE);
+                    decReqBtn.setVisibility(View.VISIBLE);
                     String date = DateFormat.getDateInstance().format(new Date());
-                    frndDb.child(uid).child(userId).setValue(date);
+
                     Map reqMap = new HashMap();
-                    reqMap.put(uid + "/" + userId,date);
-                    reqMap.put(userId + "/" + uid ,date);
+                    reqMap.put(uid + "/" + userId+"/date",date);
+                    reqMap.put(userId + "/" + uid + "/date" ,date);
                     frndDb.updateChildren(reqMap, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                             if (databaseError != null){
                                 Log.d("db Err",databaseError.toException().toString());
                             }else {
-                                Log.d("db ref",databaseReference.toString());
-
                                 sendReqBtn.setText("Unfriend");
                                 frndshpStatus = 3; // frnd = 3
                                 sendReqBtn.setEnabled(true);
+                                decReqBtn.setVisibility(View.INVISIBLE);
 
                                 Map reqMap1 = new HashMap();
-                                reqMap1.put(uid + "/" + userId + "request_type",null);
-                                reqMap1.put(userId + "/" + uid + "request_type",null);
+                                reqMap1.put(uid + "/" + userId + "/request_type",null);
+                                reqMap1.put(userId + "/" + uid + "/request_type",null);
                                 frndReqDb.updateChildren(reqMap1);
 
                             }
                         }
                     });
+                }
+
+                //3 = already frnd
+                if (frndshpStatus == 3 ){
+                    decReqBtn.setVisibility(View.INVISIBLE);
+
+
+                    Map unFrndMap = new HashMap();
+                    unFrndMap.put(uid + "/" + userId,null);
+                    unFrndMap.put(userId + "/" + uid ,null);
+
+                    frndDb.updateChildren(unFrndMap, new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                            if (databaseError != null){
+                                Log.d("db Err",databaseError.toException().toString());
+                            }else {
+                                sendReqBtn.setText("Send");
+                                frndshpStatus = 0 ; // frnd = 3
+                                sendReqBtn.setEnabled(true);
+
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+        decReqBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(frndshpStatus == 2){
+                    decReqBtn.setEnabled(false);
+
+                    Map decMap = new HashMap();
+                    decMap.put(uid + "/" + userId + "/request_type",null);
+                    decMap.put(userId + "/" + uid + "/request_type",null);
+
+                    frndReqDb.updateChildren(decMap, new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                            if (databaseError != null){
+                                Log.d("db Err",databaseError.toException().toString());
+                            }else {
+                                sendReqBtn.setText("Send");
+                                frndshpStatus = 0; // not_frnd = 0
+                                sendReqBtn.setEnabled(true);
+                                decReqBtn.setVisibility(View.INVISIBLE);
+                            }
+                        }
+                    });
+
                 }
             }
         });
