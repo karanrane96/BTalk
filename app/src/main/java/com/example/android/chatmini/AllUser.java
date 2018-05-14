@@ -1,9 +1,11 @@
 package com.example.android.chatmini;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -140,10 +142,32 @@ public class AllUser extends AppCompatActivity {
                 viewHolder.mView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent profInt = new Intent(AllUser.this, ProfilePage.class);
-                        profInt.putExtra("userId", oppUserId);
-                        startActivity(profInt);
+//                        Intent profInt = new Intent(AllUser.this, ChatScreen.class);
+//                        profInt.putExtra("userId", oppUserId);
+//                        startActivity(profInt);
+                        CharSequence options[]= new CharSequence[]{"Open Profile","Send Message"};
+                        AlertDialog.Builder builder= new AlertDialog.Builder(getApplicationContext());
+                        builder.setTitle("Select Options");
+                        builder.setItems(options, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
 
+                                // CLICK EVENT FOR EACH ITEM
+                                if(which==0){
+                                    Intent profileIntent= new Intent(AllUser.this,ProfilePage.class);
+                                    profileIntent.putExtra("userID",oppUserId);
+                                    startActivity(profileIntent);
+                                }
+                                else if(which==1)
+                                {
+                                    Intent chatIntent= new Intent(AllUser.this,UserChat.class);
+                                    chatIntent.putExtra("userID",oppUserId);
+                                    startActivity(chatIntent);
+                                }
+
+                            }
+                        });
+                        builder.show();
                     }
                 });
             }

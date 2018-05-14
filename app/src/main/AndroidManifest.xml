@@ -44,6 +44,10 @@
             android:name=".ChatScreen"
             android:parentActivityName=".AllUser" />
         <activity android:name=".FriendsActivity"></activity>
+        <activity
+            android:name=".ChatScreen"
+            android:parentActivityName=".AllUser" />
+        <activity android:name=".UserChat"></activity>
     </application>
 
 </manifest>
