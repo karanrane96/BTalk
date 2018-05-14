@@ -1,11 +1,9 @@
 package com.example.android.chatmini;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,7 +24,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.roger.catloadinglibrary.CatLoadingView;
 
 
 import java.io.InputStream;
@@ -35,44 +32,36 @@ import java.net.URL;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class AllUser extends AppCompatActivity {
+public class FriendsActivity extends AppCompatActivity {
 
-    private RecyclerView userList;
-    private DatabaseReference userDatabase;
-    public CatLoadingView avi;
-    TextView loadingMsg;
-
+    private RecyclerView frndList;
+    private DatabaseReference frndDB, userDB;
+    String currUser;
+//    public AVLoadingIndicatorView progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_all_user);
+        setContentView(R.layout.activity_friends);
 
-        setTitle("AlL users");
+        setTitle("Friends");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        userList = (RecyclerView) findViewById(R.id.user_rec_view);
-        userList.setHasFixedSize(true);
+
+        frndList = (RecyclerView) findViewById(R.id.frnd_rec_view);
+        frndList.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        userList.setLayoutManager(linearLayoutManager);
-        userDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
-        userDatabase.keepSynced(true);
-        avi = new CatLoadingView();
-        avi.setCanceledOnTouchOutside(false);
-        avi.setText("Loading users...");
+        frndList.setLayoutManager(linearLayoutManager);
 
-       // avi.show(getSupportFragmentManager(), "");
+        currUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-//        loadingMsg = findViewById(R.id.progress_txt);
+        frndDB = FirebaseDatabase.getInstance().getReference().child("Friends").child("");
+        frndDB.keepSynced(true);
+        userDB = FirebaseDatabase.getInstance().getReference().child("Users");
+        userDB.keepSynced(true);
+        //        progressBar = (AVLoadingIndicatorView) findViewById(R.id.progress_bar);
+
 
     }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        //finish();
-    }
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
@@ -92,7 +81,7 @@ public class AllUser extends AppCompatActivity {
                 Toast.makeText(this,"search",Toast.LENGTH_LONG).show();
                 break;
             case R.id.menu_profile:
-                Intent profSetting = new Intent(AllUser.this, ProfileSetting.class);
+                Intent profSetting = new Intent(FriendsActivity.this, ProfileSetting.class);
                 profSetting.putExtra("uid", FirebaseAuth.getInstance().getCurrentUser().getUid().toString());
                 startActivity(profSetting);
                 break;
@@ -108,16 +97,19 @@ public class AllUser extends AppCompatActivity {
         return super.onOptionsItemSelected(menuItem);
     }
 
+    //main logic
+
     @Override
     protected void onStart() {
         super.onStart();
-        //avi.show();
-       // loadingMsg.setVisibility(View.VISIBLE);
 
-       userDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+//        progressBar.show();
+        // loadingMsg.setVisibility(View.VISIBLE);
+
+        frndDB.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-               // avi.hide();
+//                progressBar.hide();
                 //loadingMsg.setVisibility(View.INVISIBLE);
             }
 
@@ -127,25 +119,44 @@ public class AllUser extends AppCompatActivity {
             }
         });
 
-        FirebaseRecyclerAdapter<Users,UserViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Users, UserViewHolder>(
-                Users.class,
+        FirebaseRecyclerAdapter<Friend,FrndViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Friend, FrndViewHolder>(
+                Friend.class,
                 R.layout.single_user_list_view,
-                UserViewHolder.class,
-                userDatabase
+                FrndViewHolder.class,
+                frndDB
         ) {
-            @Override
-            protected void populateViewHolder(UserViewHolder viewHolder, Users model, int position) {
-                Log.d("data",model.getName());
-                viewHolder.setValues(model.getName(), model.getDesig(), model.getCompany(), model.getProfile_pic().toString());
 
+            @Override
+            protected void populateViewHolder(final FrndViewHolder viewHolder, Friend model, int position) {
+
+                final String date = model.getDate();
                 final String oppUserId = getRef(position).getKey();
-                Log.d("getKey: ",oppUserId);
+
+                final String list_user_id = getRef(position).getKey();
+
+                userDB.child(list_user_id).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String name, profilePic;
+                        name = dataSnapshot.child("name").getValue().toString();
+                        profilePic = dataSnapshot.child("profile_pic").getValue().toString();
+                        viewHolder.setValues(name, date, profilePic);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.d("db ref",databaseError.toString());
+
+                    }
+                });
                 viewHolder.mView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent chatInt = new Intent(AllUser.this, ProfilePage.class);
+
+                        //TODO friend chat
+                        Intent chatInt = new Intent(FriendsActivity.this, UserChat.class);
                         chatInt.putExtra("userId", oppUserId);
-                        chatInt.putExtra("currentId",FirebaseAuth.getInstance().getCurrentUser().getUid().toString());
+                        chatInt.putExtra("currentId",currUser);
                         startActivity(chatInt);
 
                     }
@@ -153,35 +164,36 @@ public class AllUser extends AppCompatActivity {
             }
         };
 
-        userList.setAdapter(firebaseRecyclerAdapter);
-
+        frndList.setAdapter(firebaseRecyclerAdapter);
     }
 
 
-
-     public static class UserViewHolder extends RecyclerView.ViewHolder {
+    public static class FrndViewHolder extends RecyclerView.ViewHolder {
 
         public View mView;
 
-        public UserViewHolder(View itemView) {
+        public FrndViewHolder(View itemView) {
             super(itemView);
 
             this.mView = itemView;
         }
 
-        public void setValues(String nameh, String desigh, String comp, String profile){
+
+        public void setValues(String nameh, String date, String profile) {
             TextView nameTv, desigTv;
             nameTv =  mView.findViewById(R.id.tx_name);
             desigTv = mView.findViewById(R.id.user_desig);
             CircleImageView profilePic = mView.findViewById(R.id.user_profile_pic);
             nameTv.setText(nameh);
-            desigTv.setText(desigh+"@"+comp);
+            desigTv.setText("since "+date);
             if (profile.length() > 0 && !profile.toString().equals("default")){
                 new ImageLoadTask(profile, profilePic).execute();
                 //profilePic.setImageURI(mUri);
             }
+
         }
     }
+
 
 
     public static class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
@@ -218,4 +230,5 @@ public class AllUser extends AppCompatActivity {
         }
 
     }
+
 }

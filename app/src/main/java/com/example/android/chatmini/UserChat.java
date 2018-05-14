@@ -4,7 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -32,10 +32,9 @@ import java.util.Map;
 
 
 public class UserChat extends AppCompatActivity {
-        private  String mChatUser;
+    private  String mChatUser;
 
     private DatabaseReference mRootRef;
-    private FirebaseAuth mAuth;
     String mCurrentUserId;
     private ImageButton mChatAddButton;
     private ImageButton mChatSendButton;
@@ -54,7 +53,7 @@ public class UserChat extends AppCompatActivity {
         setContentView(R.layout.activity_user_chat);
 
         mChatUser=getIntent().getStringExtra("userId");
-        mCurrentUserId=getIntent().getStringExtra("currentID");
+        //mCurrentUserId=getIntent().getStringExtra("currentID");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mChatAddButton= (ImageButton)findViewById(R.id.chat_add_btn);
@@ -69,10 +68,6 @@ public class UserChat extends AppCompatActivity {
         mMessagesList.setLayoutManager(mLinearLayout);
 
         mMessagesList.setAdapter(mAdapter);
-        mRootRef.child("messages").child(mCurrentUserId).child(mChatUser).getKey();
-
-        loadMessages();
-
 
 
        // -----------------------Sending Chats -----------------------
@@ -84,8 +79,8 @@ public class UserChat extends AppCompatActivity {
             }
         });
 
-        //mAuthFirebaseAuth.getInstance();
-        //mCurrentUserId=mAuth.getCurrentUser().getUid();
+        mCurrentUserId= getIntent().getStringExtra("currentId");
+
         mRootRef= FirebaseDatabase.getInstance().getReference();
         mRootRef.child("Users").child(mChatUser).addValueEventListener(new ValueEventListener() {
             @Override
@@ -131,6 +126,8 @@ public class UserChat extends AppCompatActivity {
 
             }
         });
+
+        loadMessages();
     }
 
     private void loadMessages() {
@@ -179,7 +176,7 @@ public class UserChat extends AppCompatActivity {
             messageMap.put("time", ServerValue.TIMESTAMP);
             messageMap.put("from",mCurrentUserId);
 
-            DatabaseReference user_message_push= mRootRef.child("Messages").child(mCurrentUserId).child(mChatUser).push();
+            DatabaseReference user_message_push= mRootRef.child("messages").child(mCurrentUserId).child(mChatUser).push();
 
             String push_id= user_message_push.getKey();
 

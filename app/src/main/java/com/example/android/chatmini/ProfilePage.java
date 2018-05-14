@@ -10,17 +10,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.wang.avi.AVLoadingIndicatorView;
-
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -38,8 +34,8 @@ public class ProfilePage extends AppCompatActivity {
     Button sendReqBtn, decReqBtn;
     String uName, uCompany, uDesig, uEmail, uid, profilePic, userId;
     int frndshpStatus; // 0 = not frnd, 1 = sent, 2 = rec, 3 = frnd
-    DatabaseReference databaseReference, userDb, frndReqDb, frndDb,notificationDb;
-
+    DatabaseReference databaseReference, userDb, frndReqDb, frndDb;
+   // AVLoadingIndicatorView progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +47,13 @@ public class ProfilePage extends AppCompatActivity {
 
         userId = getIntent().getStringExtra("userId");
         databaseReference = FirebaseDatabase.getInstance().getReference();
+
         userDb = databaseReference.child("Users").child(userId);
         frndReqDb = databaseReference.child("Friend_req");
         frndDb = databaseReference.child("Friends");
-        notificationDb=databaseReference.child("Notifications");
+        userDb.keepSynced(true);
+        frndDb.keepSynced(true);
+        frndReqDb.keepSynced(true);
 
         frndshpStatus = 0;
         status = findViewById(R.id.user_status);
@@ -66,8 +65,8 @@ public class ProfilePage extends AppCompatActivity {
         sendReqBtn = findViewById(R.id.send_req_btn);
         decReqBtn = findViewById(R.id.dec_req_btn);
         decReqBtn.setVisibility(View.INVISIBLE);
-//        progress = findViewById(R.id.progress_barr);
-//        progress.show();
+       // progress = findViewById(R.id.progress_bar);
+        //progress.show();
 
         userDb.addValueEventListener(new ValueEventListener() {
             @Override
@@ -98,13 +97,32 @@ public class ProfilePage extends AppCompatActivity {
                                 frndshpStatus = 2; // rec = 2
                                 sendReqBtn.setEnabled(true);
                                 decReqBtn.setVisibility(View.VISIBLE);
+                                decReqBtn.setVisibility(View.VISIBLE);
                             }else if (reqType.equals("sent")){
                                 sendReqBtn.setText("Cancel");
                                 frndshpStatus = 1; // sent = 1
                                 sendReqBtn.setEnabled(true);
                             }
+                        } else {
+                            frndDb.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if(dataSnapshot.hasChild(userId)){
+                                        frndshpStatus = 3;
+                                        decReqBtn.setVisibility(View.INVISIBLE);
+                                        sendReqBtn.setVisibility(View.VISIBLE);
+                                        sendReqBtn.setText("Unfriend");
+                                        sendReqBtn.setEnabled(true);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    Log.d("db ref",databaseReference.toString());
+                                }
+                            });
                         }
-//                        progress.hide();
+                        //progress.hide();
                     }
 
                     @Override
@@ -135,22 +153,10 @@ public class ProfilePage extends AppCompatActivity {
                             if (databaseError != null){
                                 Log.d("db Err",databaseError.toException().toString());
                             }else {
-                                Log.d("db ref",databaseReference.toString());
-
                                 sendReqBtn.setText("Cancel");
+                                decReqBtn.setVisibility(View.INVISIBLE);
                                 frndshpStatus = 1; // sent = 1
                                 sendReqBtn.setEnabled(true);
-
-                                HashMap<String,String> notificationData=  new HashMap<>();
-                                notificationData.put("From",uid);
-                                notificationData.put("type","request");
-
-                                notificationDb.child(userId).push().setValue(notificationData).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Toast.makeText(getApplicationContext(),"Request Sent",Toast.LENGTH_LONG).show();
-                                    }
-                                });
                             }
                         }
                     });
@@ -158,15 +164,14 @@ public class ProfilePage extends AppCompatActivity {
                 // sent : status = 1
                 if (frndshpStatus == 1){
                     Map reqMap = new HashMap();
-                    reqMap.put(uid + "/" + userId + "request_type",null);
-                    reqMap.put(userId + "/" + uid + "request_type",null);
+                    reqMap.put(uid + "/" + userId + "/request_type",null);
+                    reqMap.put(userId + "/" + uid + "/request_type",null);
                     frndReqDb.updateChildren(reqMap, new DatabaseReference.CompletionListener() {
                         @Override
-                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        public void onComplete(final DatabaseError databaseError, DatabaseReference databaseReference) {
                             if (databaseError != null){
                                 Log.d("db Err",databaseError.toException().toString());
                             }else {
-                                Log.d("db ref",databaseReference.toString());
 
                                 sendReqBtn.setText("Send");
                                 frndshpStatus = 0; // not_frnd = 0
@@ -176,33 +181,85 @@ public class ProfilePage extends AppCompatActivity {
                     });
                 }
 
+                // 2 = recd
                 if (frndshpStatus == 2){
-                    decReqBtn.setVisibility(View.INVISIBLE);
+                    decReqBtn.setVisibility(View.VISIBLE);
                     String date = DateFormat.getDateInstance().format(new Date());
-                    frndDb.child(uid).child(userId).setValue(date);
+
                     Map reqMap = new HashMap();
-                    reqMap.put(uid + "/" + userId,date);
-                    reqMap.put(userId + "/" + uid ,date);
+                    reqMap.put(uid + "/" + userId+"/date",date);
+                    reqMap.put(userId + "/" + uid + "/date" ,date);
                     frndDb.updateChildren(reqMap, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                             if (databaseError != null){
                                 Log.d("db Err",databaseError.toException().toString());
                             }else {
-                                Log.d("db ref",databaseReference.toString());
-
                                 sendReqBtn.setText("Unfriend");
                                 frndshpStatus = 3; // frnd = 3
                                 sendReqBtn.setEnabled(true);
+                                decReqBtn.setVisibility(View.INVISIBLE);
 
                                 Map reqMap1 = new HashMap();
-                                reqMap1.put(uid + "/" + userId + "request_type",null);
-                                reqMap1.put(userId + "/" + uid + "request_type",null);
+                                reqMap1.put(uid + "/" + userId + "/request_type",null);
+                                reqMap1.put(userId + "/" + uid + "/request_type",null);
                                 frndReqDb.updateChildren(reqMap1);
 
                             }
                         }
                     });
+                }
+
+                //3 = already frnd
+                if (frndshpStatus == 3 ){
+                    decReqBtn.setVisibility(View.INVISIBLE);
+
+
+                    Map unFrndMap = new HashMap();
+                    unFrndMap.put(uid + "/" + userId,null);
+                    unFrndMap.put(userId + "/" + uid ,null);
+
+                    frndDb.updateChildren(unFrndMap, new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                            if (databaseError != null){
+                                Log.d("db Err",databaseError.toException().toString());
+                            }else {
+                                sendReqBtn.setText("Send");
+                                frndshpStatus = 0 ; // frnd = 3
+                                sendReqBtn.setEnabled(true);
+
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+        decReqBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(frndshpStatus == 2){
+                    decReqBtn.setEnabled(false);
+
+                    Map decMap = new HashMap();
+                    decMap.put(uid + "/" + userId + "/request_type",null);
+                    decMap.put(userId + "/" + uid + "/request_type",null);
+
+                    frndReqDb.updateChildren(decMap, new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                            if (databaseError != null){
+                                Log.d("db Err",databaseError.toException().toString());
+                            }else {
+                                sendReqBtn.setText("Send");
+                                frndshpStatus = 0; // not_frnd = 0
+                                sendReqBtn.setEnabled(true);
+                                decReqBtn.setVisibility(View.INVISIBLE);
+                            }
+                        }
+                    });
+
                 }
             }
         });

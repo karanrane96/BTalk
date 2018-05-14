@@ -1,27 +1,18 @@
 package com.example.android.chatmini;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.PopupMenu;
-import android.text.InputType;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -32,13 +23,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.wang.avi.AVLoadingIndicatorView;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
+
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -49,7 +38,7 @@ public class ProfileSetting extends AppCompatActivity {
     CircleImageView profPic;
     ImageView editCompany, editDesig;
     String m_Text, uName, uCompany, uDesig, uEmail, uid, profilePic;
-    AVLoadingIndicatorView progress;
+    //AVLoadingIndicatorView progress;
     DatabaseReference mDb;
     private DatabaseReference database;
     private DatabaseReference mNotitificationDatabase;
@@ -65,6 +54,7 @@ public class ProfileSetting extends AppCompatActivity {
 
         uid = FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
         mDb = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
+        mDb.keepSynced(true);
         Log.d(TAG,uid);
         status = findViewById(R.id.user_status);
         userName = findViewById(R.id.user_name);
@@ -74,11 +64,12 @@ public class ProfileSetting extends AppCompatActivity {
         profPic = findViewById(R.id.profile_pic);
         editCompany = findViewById(R.id.edit_company);
         editDesig = findViewById(R.id.edit_desig);
-        progress = findViewById(R.id.progress_bar);
+        //progress = findViewById(R.id.progress_bar);
         database = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
+        database.keepSynced(true);
 
-        progress.setIndicator("Loading Deatils...");
-        progress.show();
+        //progress.setIndicator("Loading Deatils...");
+       // progress.show();
         getDbData();
 
         editCompany.setOnClickListener(new View.OnClickListener() {
@@ -100,7 +91,7 @@ public class ProfileSetting extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         dialog.hide();
-                        progress.show();
+                        //progress.show();
                         m_Text = editText.getText().toString();
                         try {
                             database.child("company").setValue(m_Text).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -137,7 +128,7 @@ public class ProfileSetting extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         dialog.hide();
-                        progress.show();
+                        //progress.show();
 
                         m_Text = editText.getText().toString();
                         try {
@@ -178,7 +169,7 @@ public class ProfileSetting extends AppCompatActivity {
                 email.setText(uEmail);
                 designation.setText(uDesig);
                 status.setText(uDesig+" @ "+uCompany);
-                progress.hide();
+                //progress.hide();
 
             }
 

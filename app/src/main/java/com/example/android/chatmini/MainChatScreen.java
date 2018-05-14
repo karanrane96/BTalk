@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class MainChatScreen extends AppCompatActivity {
     FloatingActionButton mainFab, addPeople, peopleList;
@@ -130,14 +131,16 @@ public class MainChatScreen extends AppCompatActivity {
         }
     }
 
+    //it is for all ppl
     public void onAddpplFabClick(View view){
-        Toast.makeText(this, "add ppl fab clicked", Toast.LENGTH_SHORT).show();
-
+        Intent intent = new Intent(getApplicationContext(), AllUser.class);
+        startActivity(intent);
     }
 
+
+    //it is for friend list
     public void onAllPplFabClick(View view){
-        Toast.makeText(this, "all ppl fab clicked", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(getApplicationContext(), AllUser.class);
+        Intent intent = new Intent(getApplicationContext(), FriendsActivity.class);
         startActivity(intent);
     }
 
