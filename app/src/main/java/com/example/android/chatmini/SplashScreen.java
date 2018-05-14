@@ -23,7 +23,7 @@ public class SplashScreen extends AppCompatActivity {
             iv=(ImageView)findViewById(R.id.iv);
             Animation myAnimation= AnimationUtils.loadAnimation(this,R.anim.my_transition);
             iv.startAnimation(myAnimation);
-              Intent loginIntent= new Intent(SplashScreen.this,MainChatScreen.class);
+              final Intent loginIntent= new Intent(SplashScreen.this,MainChatScreen.class);
               startActivity(loginIntent);
               finish();
 //            Thread timer= new Thread() {
@@ -31,12 +31,13 @@ public class SplashScreen extends AppCompatActivity {
 //                public void run() {
 //                    try {
 //                        sleep(3000);
+//                        startActivity(loginIntent);
 //                    } catch (InterruptedException e) {
 //                        e.printStackTrace();
 //
 //                    }
 //                    finally {
-//                        startActivity(loginIntent);
+//
 //                        finish();
 //                    }
 //
