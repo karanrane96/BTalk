@@ -48,6 +48,7 @@ public class UserChat extends AppCompatActivity {
         setContentView(R.layout.activity_user_chat);
 
         mChatUser=getIntent().getStringExtra("userId");
+        mChatUser=getIntent().getStringExtra("currentID");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mChatAddButton= (ImageButton)findViewById(R.id.chat_add_btn);
@@ -126,7 +127,7 @@ public class UserChat extends AppCompatActivity {
     }
 
     private void loadMessages() {
-        mRootRef.child("Messages").child(mCurrentUserId).child(mChatUser).addChildEventListener(new ChildEventListener() {
+        mRootRef.child("messages").child(mCurrentUserId).child(mChatUser).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Messages message= dataSnapshot.getValue(Messages.class);

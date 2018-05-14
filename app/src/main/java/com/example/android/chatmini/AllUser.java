@@ -139,6 +139,7 @@ public class AllUser extends AppCompatActivity {
                     public void onClick(View view) {
                         Intent chatInt = new Intent(AllUser.this, ChatScreen.class);
                         chatInt.putExtra("userId", oppUserId);
+                        chatInt.putExtra("currentID",FirebaseAuth.getInstance().getCurrentUser().getUid().toString());
                         startActivity(chatInt);
 
                     }
