@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 public class UserChat extends AppCompatActivity {
-        private  String mChatUser;
+    private  String mChatUser;
 
     private DatabaseReference mRootRef;
     String mCurrentUserId;
@@ -62,9 +62,6 @@ public class UserChat extends AppCompatActivity {
 
         mMessagesList.setAdapter(mAdapter);
 
-       loadMessages();
-
-
 
        // -----------------------Sending Chats -----------------------
         mChatSendButton.setOnClickListener(new View.OnClickListener() {
@@ -75,10 +72,11 @@ public class UserChat extends AppCompatActivity {
             }
         });
 
-
-        mCurrentUserId= FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
+        mCurrentUserId= getIntent().getStringExtra("currentId");
 
         mRootRef= FirebaseDatabase.getInstance().getReference();
+
+        Log.d("onCreate : ",getIntent().getStringExtra("currentId"));
 
         mRootRef.child("Users").child(mChatUser).addValueEventListener(new ValueEventListener() {
             @Override
@@ -92,6 +90,7 @@ public class UserChat extends AppCompatActivity {
 
             }
         });
+
 
         mRootRef.child("Chats").child(mCurrentUserId).addValueEventListener(new ValueEventListener() {
             @Override
@@ -124,6 +123,8 @@ public class UserChat extends AppCompatActivity {
 
             }
         });
+
+        loadMessages();
     }
 
     public void loadMessages() {

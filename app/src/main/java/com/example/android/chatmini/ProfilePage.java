@@ -47,9 +47,13 @@ public class ProfilePage extends AppCompatActivity {
 
         userId = getIntent().getStringExtra("userId");
         databaseReference = FirebaseDatabase.getInstance().getReference();
+
         userDb = databaseReference.child("Users").child(userId);
         frndReqDb = databaseReference.child("Friend_req");
         frndDb = databaseReference.child("Friends");
+        userDb.keepSynced(true);
+        frndDb.keepSynced(true);
+        frndReqDb.keepSynced(true);
 
         frndshpStatus = 0;
         status = findViewById(R.id.user_status);
@@ -103,7 +107,10 @@ public class ProfilePage extends AppCompatActivity {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     if(dataSnapshot.hasChild(userId)){
-
+                                        frndshpStatus = 3;
+                                        decReqBtn.setVisibility(View.INVISIBLE);
+                                        sendReqBtn.setVisibility(View.VISIBLE);
+                                        sendReqBtn.setText("Unfriend");
                                     }
                                 }
 

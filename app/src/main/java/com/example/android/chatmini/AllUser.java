@@ -55,6 +55,7 @@ public class AllUser extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         userList.setLayoutManager(linearLayoutManager);
         userDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
+        userDatabase.keepSynced(true);
         avi = new CatLoadingView();
         avi.setCanceledOnTouchOutside(false);
         avi.setText("Loading users...");
@@ -144,7 +145,7 @@ public class AllUser extends AppCompatActivity {
                     public void onClick(View view) {
                         Intent chatInt = new Intent(AllUser.this, UserChat.class);
                         chatInt.putExtra("userId", oppUserId);
-                        chatInt.putExtra("currentID",FirebaseAuth.getInstance().getCurrentUser().getUid().toString());
+                        chatInt.putExtra("currentId",FirebaseAuth.getInstance().getCurrentUser().getUid().toString());
                         startActivity(chatInt);
 
                     }
