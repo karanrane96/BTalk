@@ -11,7 +11,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.cloud.translate.Translate;
+import com.google.cloud.translate.TranslateOptions;
+import com.google.cloud.translate.Translation;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

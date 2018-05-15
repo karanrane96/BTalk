@@ -88,6 +88,9 @@ public class FriendsActivity extends AppCompatActivity {
             case R.id.menu_req_st:
                 Toast.makeText(this,"req in menu",Toast.LENGTH_LONG).show();
                 break;
+            case R.id.logout:
+                FirebaseAuth.getInstance().signOut();
+                break;
 
             default:
                 return false;
@@ -130,8 +133,6 @@ public class FriendsActivity extends AppCompatActivity {
             protected void populateViewHolder(final FrndViewHolder viewHolder, Friend model, int position) {
 
                 final String date = model.getDate();
-                final String oppUserId = getRef(position).getKey();
-
                 final String list_user_id = getRef(position).getKey();
 
                 userDB.child(list_user_id).addValueEventListener(new ValueEventListener() {
@@ -155,7 +156,7 @@ public class FriendsActivity extends AppCompatActivity {
 
                         //TODO friend chat
                         Intent chatInt = new Intent(FriendsActivity.this, UserChat.class);
-                        chatInt.putExtra("userId", oppUserId);
+                        chatInt.putExtra("userId", list_user_id);
                         chatInt.putExtra("currentId",currUser);
                         startActivity(chatInt);
 

@@ -48,7 +48,7 @@ public class AllUser extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_user);
 
-        setTitle("AlL users");
+        setTitle("All users");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         userList = (RecyclerView) findViewById(R.id.user_rec_view);
         userList.setHasFixedSize(true);
@@ -98,6 +98,9 @@ public class AllUser extends AppCompatActivity {
                 break;
             case R.id.menu_req_st:
                 Toast.makeText(this,"req in menu",Toast.LENGTH_LONG).show();
+                break;
+            case R.id.logout:
+                FirebaseAuth.getInstance().signOut();
                 break;
 
             default:

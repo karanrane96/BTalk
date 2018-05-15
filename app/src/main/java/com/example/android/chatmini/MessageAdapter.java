@@ -1,6 +1,7 @@
 package com.example.android.chatmini;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,7 +65,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public void onBindViewHolder(final MessageViewHolder viewHolder, int i) {
 
         Messages c = mMessageList.get(i);
-        viewHolder.messageText.setText(c.getMessage());
+        try {
+            Log.d("message", c.getMessage());
+            viewHolder.messageText.setText(c.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 //        String from_user = c.getFrom();
 //        String message_type = c.getType();
