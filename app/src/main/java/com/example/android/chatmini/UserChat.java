@@ -48,13 +48,10 @@ public class UserChat extends AppCompatActivity {
     String mCurrentUserId;
     private String mChatUser;
     private DatabaseReference mRootRef;
-    String mCurrentUserId;
+
     private ImageButton mChatAddButton;
     private ImageButton mChatSendButton;
     private EditText mChatMsgView;
-
-    private final List<Messages> messagesList = new ArrayList<>();
-
     private LinearLayoutManager mLinearLayout;
     private MessageAdapter mAdapter;
 
@@ -76,6 +73,8 @@ public class UserChat extends AppCompatActivity {
         setContentView(R.layout.activity_user_chat);
 
         mChatUser = getIntent().getStringExtra("userId");
+        mCurrentUserId = getIntent().getStringExtra("currentId");
+
         //mCurrentUserId=getIntent().getStringExtra("currentID");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -84,6 +83,7 @@ public class UserChat extends AppCompatActivity {
         mChatMsgView = findViewById(R.id.chat_message_view);
         mImageStorage = FirebaseStorage.getInstance().getReference();
         mAdapter = new MessageAdapter(messagesList);
+        mRootRef = FirebaseDatabase.getInstance().getReference();
 
         mMessagesList = findViewById(R.id.messages_list);
         mRefreshLayout = findViewById(R.id.message_swipe_layout);
@@ -128,9 +128,7 @@ public class UserChat extends AppCompatActivity {
         });
 
 
-        mCurrentUserId = getIntent().getStringExtra("currentId");
 
-        mRootRef = FirebaseDatabase.getInstance().getReference();
         mRootRef.child("Users").child(mChatUser).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -300,6 +298,7 @@ public class UserChat extends AppCompatActivity {
 
 
     private void loadMessages() {
+        Log.d("users curr:", mCurrentUserId+"\nChatuser: "+mChatUser);
 
         DatabaseReference messageRef = mRootRef.child("messages").child(mCurrentUserId).child(mChatUser);
         Query messageQuery = messageRef.limitToLast(mCurrentPage * TOTAL_ITEMS_TO_LOAD);

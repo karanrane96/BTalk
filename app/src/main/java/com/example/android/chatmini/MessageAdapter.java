@@ -1,6 +1,8 @@
 package com.example.android.chatmini;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.constraint.ConstraintLayout;
@@ -65,6 +67,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         public TextView messageText;
         public CircleImageView profileImage;
         public TextView displayName;
+        public ImageView messageImage;
 
 
         public MessageViewHolder(View view) {
@@ -73,7 +76,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             messageText = (TextView) view.findViewById(R.id.message_text_layout);
             profileImage = (CircleImageView) view.findViewById(R.id.message_profile_layout);
             displayName = (TextView) view.findViewById(R.id.name_text_layout);
-            //messageImage = (CircleImageView) view.findViewById(R.id.message_image_layout);
+            messageImage = (ImageView) view.findViewById(R.id.message_image_layout);
 
         }
     }
@@ -151,8 +154,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         } else {
 
             viewHolder.messageText.setVisibility(View.INVISIBLE);
-            Picasso.with(viewHolder.profileImage.getContext()).load(c.getMessage())
-                    .placeholder(R.drawable.ic_default_profile).into(viewHolder.messageImage);
+            try {
+                Picasso.with(viewHolder.profileImage.getContext()).load(c.getMessage())
+                        .placeholder(R.drawable.ic_default_profile).into(viewHolder.messageImage);
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
     }
@@ -160,25 +169,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     @Override
     public int getItemCount() {
         return mMessageList.size();
-    }
-
-    public class MessageViewHolder extends RecyclerView.ViewHolder {
-
-        public TextView messageText;
-        public CircleImageView profileImage;
-        public TextView displayName;
-        public ImageView messageImage;
-
-
-        public MessageViewHolder(View view) {
-            super(view);
-
-            messageText = view.findViewById(R.id.message_text_layout);
-            profileImage = view.findViewById(R.id.message_profile_layout);
-            displayName = view.findViewById(R.id.name_text_layout);
-            messageImage = view.findViewById(R.id.message_image_layout);
-
-        }
     }
 
 
