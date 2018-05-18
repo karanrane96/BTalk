@@ -1,6 +1,11 @@
 package com.example.android.chatmini;
 
+import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.AsyncTask;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,9 +21,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static android.graphics.Color.BLACK;
+import static android.graphics.Color.WHITE;
 
 /**
  * Created by Karan on 15-05-2018.
@@ -30,6 +42,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     private List<Messages> mMessageList;
     private DatabaseReference mUserDatabase;
     private FirebaseAuth mAuth;
+    CircleImageView messageImage;
 
     public MessageAdapter(List<Messages> mMessageList) {
 
@@ -59,12 +72,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
             messageText = (TextView) view.findViewById(R.id.message_text_layout);
             profileImage = (CircleImageView) view.findViewById(R.id.message_profile_layout);
-            displayName = (TextView) view.findViewById(R.id.name_text_layout)
-            //messageImage = (ImageView) view.findViewById(R.id.message_image_layout);
+            displayName = (TextView) view.findViewById(R.id.name_text_layout);
+            //messageImage = (CircleImageView) view.findViewById(R.id.message_image_layout);
 
         }
     }
 
+    @SuppressLint("ResourceType")
     @Override
     public void onBindViewHolder(final MessageViewHolder viewHolder, int i) {
          mAuth=FirebaseAuth.getInstance();
@@ -79,27 +93,35 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         String CurrentUser=mAuth.getCurrentUser().getUid();
 
        String from_user = c.getFrom();
+        Log.d("db null?", from_user);
 
        if(from_user.equals(CurrentUser))
        {
-        viewHolder.messageText.setBackgroundResource(Color.WHITE);
+        viewHolder.messageText.setBackgroundColor(WHITE);
         viewHolder.messageText.setTextColor(Color.BLACK);
+
+
        }
        else{
-           viewHolder.messageText.setBackgroundResource(R.drawable.message_single_background);
-           viewHolder.messageText.setTextColor(Color.WHITE);
+           viewHolder.messageText.setBackgroundColor(WHITE);
+           viewHolder.messageText.setTextColor(BLACK);
        }
         String message_type = c.getType();
 //
 //
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(from_user);
+        Log.d("db null?", from_user);
 
         mUserDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 String name = dataSnapshot.child("name").getValue().toString();
+                String prof = dataSnapshot.child("profile_pic").getValue().toString();
                 //String image = dataSnapshot.child("thumb_image").getValue().toString();
+                if (prof.length() > 0 && !prof.toString().equals("default")){
+                    new ImageLoadTask(prof, viewHolder.profileImage).execute();
+                }
 
                 viewHolder.displayName.setText(name);
 
@@ -116,7 +138,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
         if(message_type.equals("text")) {
 
-            viewHolder.messageText.setText(c.getMessage());
+            try {
+                viewHolder.messageText.setText(c.getMessage());
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             //viewHolder.messageImage.setVisibility(View.INVISIBLE);
 
 
@@ -136,6 +164,40 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
 
 
+    public static class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
+
+        private String url;
+        private ImageView imageView;
+
+        public ImageLoadTask(String url, ImageView imageView) {
+            this.url = url;
+            this.imageView = imageView;
+        }
+
+        @Override
+        protected Bitmap doInBackground(Void... params) {
+            try {
+                URL urlConnection = new URL(url);
+                HttpURLConnection connection = (HttpURLConnection) urlConnection
+                        .openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+                InputStream input = connection.getInputStream();
+                Bitmap myBitmap = BitmapFactory.decodeStream(input);
+                return myBitmap;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            super.onPostExecute(result);
+            imageView.setImageBitmap(result);
+        }
+
+    }
 
 
 

@@ -6,6 +6,7 @@ import android.util.Log;
 import com.google.cloud.translate.Translate;
 import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.concurrent.ExecutionException;
 
@@ -14,36 +15,31 @@ import java.util.concurrent.ExecutionException;
  */
 
 public class Messages {
-    private String message, type;
+    private String message, type, from;
     private long  time;
     private boolean seen;
+    String currUser;
 
-    public static String from;
+    public Messages(){
 
-    public Messages(String from) {
-        this.from = from;
+        currUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
-    public String getFrom() {
-        return from;
-    }
-
-    public void setFrom(String from) {
-        this.from = from;
-    }
-
-    public Messages(String message, String type, long time, boolean seen) {
+    public Messages(String message, String type, String from, long time, boolean seen) {
         this.message = message;
         this.type = type;
+        this.from = from;
         this.time = time;
         this.seen = seen;
     }
 
     public String getMessage() throws ExecutionException, InterruptedException {
-
-        Log.d("frst: ",this.message);
-        from = new TranslateAsync(this.message).execute().get();
-        return from;
+        if(!currUser.equals(from)){
+            String temp;
+            temp = new TranslateAsync(this.message).execute().get();
+            return temp;
+        }
+        return this.message;
     }
 
     public void setMessage(String message) {
@@ -56,6 +52,15 @@ public class Messages {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getFrom() {
+        Log.d("from user get method: ", this.from);
+        return from;
+    }
+
+    public void setFrom(String from) {
+        this.from = from;
     }
 
     public long getTime() {
@@ -74,9 +79,17 @@ public class Messages {
         this.seen = seen;
     }
 
-    public Messages(){
+    /*
 
+    public String getMessage() throws ExecutionException, InterruptedException {
+
+        Log.d("frst: ",this.message);
+        from = new TranslateAsync(this.message).execute().get();
+        return from;
     }
+*/
+
+
 
 
 
@@ -108,7 +121,6 @@ public class Messages {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             Log.d("frst: ",result);
-            from = result;
         }
 
     }
