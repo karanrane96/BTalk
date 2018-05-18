@@ -1,8 +1,6 @@
 package com.example.android.chatmini;
 
 import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.constraint.ConstraintLayout;
@@ -20,6 +18,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -43,6 +42,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     private DatabaseReference mUserDatabase;
     private FirebaseAuth mAuth;
     CircleImageView messageImage;
+
 
     public MessageAdapter(List<Messages> mMessageList) {
 
@@ -95,7 +95,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
        String from_user = c.getFrom();
         Log.d("db null?", from_user);
 
-       if(from_user.equals(CurrentUser))
+        if (from_user.equals(CurrentUser))
        {
         viewHolder.messageText.setBackgroundColor(WHITE);
         viewHolder.messageText.setTextColor(Color.BLACK);
@@ -103,8 +103,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
        }
        else{
-           viewHolder.messageText.setBackgroundColor(WHITE);
-           viewHolder.messageText.setTextColor(BLACK);
+           viewHolder.messageText.setBackgroundResource(R.drawable.message_single_background);
+           viewHolder.messageText.setTextColor(Color.WHITE);
        }
         String message_type = c.getType();
 //
@@ -151,8 +151,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         } else {
 
             viewHolder.messageText.setVisibility(View.INVISIBLE);
-           // Picasso.with(viewHolder.profileImage.getContext()).load(c.getMessage())
-            //        .placeholder(R.drawable.default_avatar).into(viewHolder.messageImage);
+            Picasso.with(viewHolder.profileImage.getContext()).load(c.getMessage())
+                    .placeholder(R.drawable.ic_default_profile).into(viewHolder.messageImage);
         }
 
     }
@@ -160,6 +160,25 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     @Override
     public int getItemCount() {
         return mMessageList.size();
+    }
+
+    public class MessageViewHolder extends RecyclerView.ViewHolder {
+
+        public TextView messageText;
+        public CircleImageView profileImage;
+        public TextView displayName;
+        public ImageView messageImage;
+
+
+        public MessageViewHolder(View view) {
+            super(view);
+
+            messageText = view.findViewById(R.id.message_text_layout);
+            profileImage = view.findViewById(R.id.message_profile_layout);
+            displayName = view.findViewById(R.id.name_text_layout);
+            messageImage = view.findViewById(R.id.message_image_layout);
+
+        }
     }
 
 
