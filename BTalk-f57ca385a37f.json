@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "btalk-5b463",
+  "private_key_id": "f57ca385a37fdfddae0f12798b26e8a9c3cba286",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCa8XVShxtkK4W0\n2MYilWu5SSzL8deNCipZl7joJwN1k/k5ORO8se8PDFi5GKzNHGYTwNRObnWP/Zhu\nRO4XK1zng/IljquXd6IA/9vcr8xQTSHtLswiKggMHqqgyYaMV5dLGr/48+yoxQvv\nD+dvfuCBNpM+bsgepSm4fDDzJo/Wnq3+a5tFa/7Y8nH6O8RXT0UKEUFA0Y7VO/I1\nZdBFRpcuMv9DiQK5gHiYIRCTFvTczO2FmeJyiH7mMiV6+6tHpgNkDyvc31/5ff+g\nt0pg35HQaNVlNsE+CQPPgqaQNNtm8rWJ6m47Kh0V/+/5aGMQL/BZEpvR+S/5m4e2\nho9G8CkfAgMBAAECggEABGUygE+GQEtLXpio1wTpF0qTNqSnvWY0uSTolGe8g+Km\nNvBx3GNc/JuYWriixXcqq1QuUZx1jkrR2HLxIOW66KbIDdB9xdN/3EplyMPETOGo\nEDivIFr6SBAiPZYDg8pD575parabF71U1aIpKdluC4xQrsk17EfTWdqzPGDzXJ58\noU2fhYdyBGWqCuE+MfXk5I82A/gHk+ZZoPfa94qQcUg+9q2g0DPBu205IRTrXDLt\nxsJd12Qs4YDSqiL+X8b4utqwbReenH6KAi48M4kwpRERNptuga7nT7Q5GYZURwaj\n08peRlVZDuEJAGNEcqxbiX1cN2WC0I36O6jFLivkgQKBgQDI1fYrhDHfLFL0OWPb\n+WO7cUr982VFFRo1+mzYwJvDUoV0yotMUriR39MfHLGIrXAM5U6/yNj40ut5M6IB\nwwNJ5Md6WU+lw6zSJ07fbuUidfgI0nw/XTY2k3Cv2+CiEOGzWn8npUJbgXqxe6Xz\nAWA52aX3YS6cV2uXoEqaz/1nnwKBgQDFgH9Y/FGxGDKXf1A/gOzWmwhAsFrgUpKv\n//9S5ajcVYf4QiHRonNqvHgdBENLZVfXSqpCWohkluBdkwlW9OIbftY3eNeNP7mB\npe8zt6KxzMy3oeIbtzyAc5YkdLUHCkmDgoWxCsFaPt8RtSy5Z9WXXu1kWMI7AAgW\nv40KqAPOgQKBgGQzrGDF0gQhHzpOr+3+na3Vtq7Bk1NGVg98ZHY4kv5+26sLqzhn\nRUMywykQrdsdfXxRpFq3oNl0kpukET6Dx85EYOpASSbRXBZ2GjoMIDJzXU85hVgv\n726HXX/AWnFBrvpHOo3TPCpfjZGjuYZmt1Xlq5KjYBgM3deG1/Ipt6rNAoGAbH7U\ndmvV7LVgRX049km60YHFHNREd+qkjm7RMhbbln6d/TFHJsRZJw915GrNFQQNJ0Xr\nFhxpxOhlRMJbZRuNgpFA2KRXtU6Gd8RSDVUZ2Raqd05Eyfj1EZNtrYU3VTC/hbEU\nBFfmM89J945RjWCPI2KQgomH2aWAzA5aSrpVrQECgYBtPllw1QFC6Gvwpt//cewj\nGd80t+fRW2ukn1DEV3L0oXzC+l5OSQjqnddBfckvS8mOQIKsduxglB2+9et0OYP3\nHex0EDPqpcS7vAoGvqTRyecGhnWwJLrtcJYRaZsqNRMDfHpTinaocy/B3AqWhhqA\nzNYUrU4oFvhu3BjxQbrAIw==\n-----END PRIVATE KEY-----\n",
+  "client_email": "btalktranslate@btalk-5b463.iam.gserviceaccount.com",
+  "client_id": "109229474902005964276",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/btalktranslate%40btalk-5b463.iam.gserviceaccount.com"
+}
