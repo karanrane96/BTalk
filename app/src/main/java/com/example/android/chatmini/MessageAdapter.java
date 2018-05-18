@@ -126,6 +126,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     new ImageLoadTask(prof, viewHolder.profileImage).execute();
                 }
 
+
                 viewHolder.displayName.setText(name);
 
                 //Picasso.with(viewHolder.profileImage.getContext()).load(image)
