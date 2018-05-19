@@ -1,11 +1,9 @@
 package com.example.android.chatmini;
 
-import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,7 +28,6 @@ import java.util.concurrent.ExecutionException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static android.graphics.Color.BLACK;
 import static android.graphics.Color.WHITE;
 
 /**
@@ -43,7 +40,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     private List<Messages> mMessageList;
     private DatabaseReference mUserDatabase;
     private FirebaseAuth mAuth;
-    CircleImageView messageImage;
+    //CircleImageView messageImage;
 
 
     public MessageAdapter(List<Messages> mMessageList) {
@@ -56,35 +53,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public MessageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.message_single_layout ,parent, false);
+                .inflate(R.layout.message_single_layout, parent, false);
 
         return new MessageViewHolder(v);
 
     }
 
-    public class MessageViewHolder extends RecyclerView.ViewHolder {
-
-        public TextView messageText;
-        public CircleImageView profileImage;
-        public TextView displayName;
-        public ImageView messageImage;
-
-
-        public MessageViewHolder(View view) {
-            super(view);
-
-            messageText = (TextView) view.findViewById(R.id.message_text_layout);
-            profileImage = (CircleImageView) view.findViewById(R.id.message_profile_layout);
-            displayName = (TextView) view.findViewById(R.id.name_text_layout);
-            messageImage = (ImageView) view.findViewById(R.id.message_image_layout);
-
-        }
-    }
-
-    @SuppressLint("ResourceType")
     @Override
     public void onBindViewHolder(final MessageViewHolder viewHolder, int i) {
-         mAuth=FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
         Messages c = mMessageList.get(i);
         try {
             Log.d("message", c.getMessage());
@@ -93,10 +70,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             e.printStackTrace();
         }
 
-        String CurrentUser=mAuth.getCurrentUser().getUid();
+        String CurrentUser = mAuth.getCurrentUser().getUid();
 
-       String from_user = c.getFrom();
-        Log.d("db null?", from_user);
+        String from_user = c.getFrom();
+        String message_type = c.getType();
+
+
+
 
         if (from_user.equals(CurrentUser))
        {
@@ -109,7 +89,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
            viewHolder.messageText.setBackgroundResource(R.drawable.message_single_background);
            viewHolder.messageText.setTextColor(Color.WHITE);
        }
-        String message_type = c.getType();
+
 //
 //
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(from_user);
@@ -140,7 +120,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             }
         });
 
-        if(message_type.equals("text")) {
+        if (message_type.equals("text")) {
 
             try {
                 viewHolder.messageText.setText(c.getMessage());
@@ -171,8 +151,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public int getItemCount() {
         return mMessageList.size();
     }
-
-
 
     public static class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
 
@@ -207,6 +185,25 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             imageView.setImageBitmap(result);
         }
 
+    }
+
+    public class MessageViewHolder extends RecyclerView.ViewHolder {
+
+        public TextView messageText;
+        public CircleImageView profileImage;
+        public TextView displayName;
+        public ImageView messageImage;
+
+
+        public MessageViewHolder(View view) {
+            super(view);
+
+            messageText = view.findViewById(R.id.message_text_layout);
+            profileImage = view.findViewById(R.id.message_profile_layout);
+            displayName = view.findViewById(R.id.name_text_layout);
+            messageImage = view.findViewById(R.id.message_image_layout);
+
+        }
     }
 
 
